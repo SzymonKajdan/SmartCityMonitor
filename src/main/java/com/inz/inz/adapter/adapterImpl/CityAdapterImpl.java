@@ -1,6 +1,7 @@
 package com.inz.inz.adapter.adapterImpl;
 
 import com.inz.inz.ExcpetionHandler.DbException;
+import com.inz.inz.ExcpetionHandler.ErrorSpecifcation;
 import com.inz.inz.adapter.CityAdapter;
 import com.inz.inz.entity.CityEntity;
 import com.inz.inz.mapper.CityMapper;
@@ -26,22 +27,31 @@ public class CityAdapterImpl implements CityAdapter {
 
     @Override
     public List<CityResourceGetLight> getCities() throws DbException {
-
-        List<CityEntity> cityEntities = cityEntityRepository.findAll();
-        if (cityEntities != null) {
-            return cityEntities.stream().map(cityMapper::mapToCityResourceGetLight).collect(Collectors.toList());
-        } else {
-            throw new DbException("ResourceNotFound", "D3", null, HttpStatus.NOT_FOUND);
+            List<CityEntity> cityEntities = cityEntityRepository.findAll();
+            if (cityEntities != null) {
+                return cityEntities.stream().map(cityMapper::mapToCityResourceGetLight).collect(Collectors.toList());
+            } else {
+                throw new DbException(ErrorSpecifcation.RESURCENOTEXIST.getDetails(), ErrorSpecifcation.RESURCENOTEXIST.getCode(), null, HttpStatus.NOT_FOUND);
+            }
         }
-    }
+
+
 
     @Override
-    public CityResource getCity(Long id) throws DbException {
-        Optional<CityEntity> cityEntity = cityEntityRepository.findById(id);
-        if (cityEntity.isPresent()) {
-            return cityMapper.mapToCityResource(cityEntity.get());
-        } else {
-            throw new DbException("ResourceNotFound", "D3", null, HttpStatus.NOT_FOUND);
+        public CityResource getCity(Long id, boolean reportsAcitve) throws DbException {
+            Optional<CityEntity> cityEntity = cityEntityRepository.findById(id);
+
+            if (cityEntity.isPresent()) {
+                if (reportsAcitve) {
+
+                          cityEntity.get().setReportList( cityEntity.get().getReportList().stream().filter(
+                                   x->x.getReportRating().getNotActiveCounter()<10&&x.getReportRating().getFalseReportQuantity()<10
+                   ).collect(Collectors.toList()));
+
+                }
+                return cityMapper.mapToCityResource(cityEntity.get());
+            } else {
+                throw new DbException(ErrorSpecifcation.RESURCENOTEXIST.getDetails(), ErrorSpecifcation.RESURCENOTEXIST.getCode(), null, HttpStatus.NOT_FOUND);
+            }
         }
     }
-}

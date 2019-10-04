@@ -2,6 +2,8 @@ package com.inz.inz.adapter.adapterImpl;
 
 import com.inz.inz.ExcpetionHandler.DbException;
 import com.inz.inz.ExcpetionHandler.EnumExcpetion;
+import com.inz.inz.ExcpetionHandler.ErrorSpecifcation;
+import com.inz.inz.ExcpetionHandler.Field;
 import com.inz.inz.adapter.ReportAdapter;
 import com.inz.inz.entity.CityEntity;
 import com.inz.inz.entity.ReportEntity;
@@ -11,14 +13,17 @@ import com.inz.inz.repository.CityEntityRepository;
 import com.inz.inz.repository.ReportEntityRepository;
 import com.inz.inz.repository.ReportRatingEntityRepository;
 import com.inz.inz.repository.UserRepository;
+import com.inz.inz.resoruce.ReportResource;
 import com.inz.inz.resoruce.ReportResourcePost;
 import com.inz.inz.seciurity.model.User;
 import com.inz.inz.seciurity.service.UserTokenReciver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Optional;
 
 @Service
 public class ReportAdapterImpl implements ReportAdapter {
@@ -53,10 +58,21 @@ public class ReportAdapterImpl implements ReportAdapter {
         }
         catch (DataIntegrityViolationException ex){
             DbException dbException = new DbException();
-            dbException.setCaused("Report save error");
-            dbException.setCode("D1");
+            dbException.setCaused(ErrorSpecifcation.CREATINGERROR.getDetails()+" Report");
+            dbException.setCode(ErrorSpecifcation.CREATINGERROR.getCode());
         }
         return reportEntity;
+    }
+
+    @Override
+    public ReportResource getReport(Long id) throws DbException {
+        Optional<ReportEntity>reportEntity=reportEntityRepository.findById(id);
+
+        if(reportEntity.isPresent()){
+            return reportMapper.mapToReport(reportEntity.get());
+        }else{
+            throw new DbException(ErrorSpecifcation.RESURCENOTEXIST.getDetails()+" report",ErrorSpecifcation.RESURCENOTEXIST.getCode(),new Field(), HttpStatus.NOT_FOUND);
+        }
     }
 
     private ReportEntity save(ReportEntity reportEntity,long id ) {

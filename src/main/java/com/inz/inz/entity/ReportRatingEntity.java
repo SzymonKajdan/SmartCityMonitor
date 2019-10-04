@@ -20,4 +20,6 @@ public class ReportRatingEntity {
     private int quantity;
 
     private int notActiveCounter;
+
+    private int falseReportQuantity;
 }

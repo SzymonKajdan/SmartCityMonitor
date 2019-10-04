@@ -11,5 +11,5 @@ public interface CityAdapter {
 
     List<CityResourceGetLight> getCities() throws DbException;
 
-    CityResource getCity(Long id) throws DbException;
+    CityResource getCity(Long id, boolean reportsAcitve) throws DbException;
 }

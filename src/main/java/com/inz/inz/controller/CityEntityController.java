@@ -7,10 +7,7 @@ import com.inz.inz.resoruce.CityResourceGetLight;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -24,14 +21,21 @@ public class CityEntityController {
     CityAdapterImpl cityAdapter;
 
     @GetMapping(value = "/getCities", produces = MEDIA_TYPE )
-    public ResponseEntity<List<CityResourceGetLight>> addReport() throws DbException {
+    public ResponseEntity<List<CityResourceGetLight>> addReport () throws DbException {
+
        List<CityResourceGetLight> cities= cityAdapter.getCities();
        return new ResponseEntity<>(cities,HttpStatus.OK);
     }
 
+
+
     @GetMapping(value = "/getCityById/{id}", produces = MEDIA_TYPE )
-    public ResponseEntity<CityResource> addReport(@PathVariable Long id) throws DbException {
-        CityResource city= cityAdapter.getCity(id);
+    public ResponseEntity<CityResource> addReport(
+            @PathVariable Long id,
+            @RequestParam (value="reportsAcitve", required = false, defaultValue = "true")
+                    boolean reportsAcitve
+                                                  ) throws DbException {
+        CityResource city= cityAdapter.getCity(id,reportsAcitve);
         return new ResponseEntity<>(city,HttpStatus.OK);
     }
 

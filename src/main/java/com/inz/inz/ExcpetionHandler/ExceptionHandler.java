@@ -21,8 +21,8 @@ public class ExceptionHandler {
     @org.springframework.web.bind.annotation.ExceptionHandler({HttpRequestMethodNotSupportedException.class})
     public ResponseEntity<ServerModelException> getUnsapportedMethodException(HttpRequestMethodNotSupportedException ex){
         ServerModelException serverModelException=new ServerModelException();
-        serverModelException.setCode("U1");
-        serverModelException.setDetails(ex.getMessage());
+        serverModelException.setCode(ErrorSpecifcation.NOTSUPPORTEDMETHOD.getCode());
+        serverModelException.setDetails(ErrorSpecifcation.NOTSUPPORTEDMETHOD.getDetails());
 
         logger.error("Unsupported method call return code "+serverModelException.getCode()+" with Http status"+HttpStatus.METHOD_NOT_ALLOWED);
 
@@ -40,7 +40,7 @@ public class ExceptionHandler {
     @org.springframework.web.bind.annotation.ExceptionHandler({MethodArgumentNotValidException.class})
     public  ResponseEntity<ServerModelException> vaildException(MethodArgumentNotValidException ex){
         ServerModelException serverModelException=new ServerModelException();
-        serverModelException.setCode("V1");
+        serverModelException.setCode("VE");
         serverModelException.setDetails("Valdiation Exception ");
         serverModelException.setFields(new ArrayList<>());
         ex.getBindingResult().getFieldErrors().stream().forEach(x->{
@@ -71,6 +71,14 @@ public class ExceptionHandler {
         return  new ResponseEntity<>(serverModelException,HttpStatus.UNAUTHORIZED);
     }
 
+    @org.springframework.web.bind.annotation.ExceptionHandler({NumberFormatException.class})
+    public  ResponseEntity<ServerModelException>convertExcepiton(NumberFormatException ex){
+
+        ServerModelException serverModelException=new ServerModelException();
+        serverModelException.setDetails("Cast fail for "+ex.getMessage());
+        serverModelException.setCode("C2");
+        return  new ResponseEntity<>(serverModelException,HttpStatus.BAD_REQUEST);
+    }
     private ServerModelException  genrateException(String code, String caused, Field field) {
         ServerModelException serverModelException=new ServerModelException();
         serverModelException.setCode(code);

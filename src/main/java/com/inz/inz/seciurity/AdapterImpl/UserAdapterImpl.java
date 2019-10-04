@@ -1,6 +1,7 @@
 package com.inz.inz.seciurity.AdapterImpl;
 
 import com.inz.inz.ExcpetionHandler.DbException;
+import com.inz.inz.ExcpetionHandler.ErrorSpecifcation;
 import com.inz.inz.entity.BanEntity;
 import com.inz.inz.entity.UserRatingEntity;
 import com.inz.inz.mapper.UserMapper;
@@ -51,8 +52,8 @@ public class UserAdapterImpl implements UserAdapter {
         } catch (DataIntegrityViolationException ex) {
 
             DbException dbException = new DbException();
-            dbException.setCaused("User already exist");
-            dbException.setCode("D1");
+            dbException.setCaused(ErrorSpecifcation.USEREXIST.getDetails());
+            dbException.setCode(ErrorSpecifcation.USEREXIST.getCode());
             throw dbException;
         }
         return user;
@@ -81,8 +82,8 @@ public class UserAdapterImpl implements UserAdapter {
         } catch (DataIntegrityViolationException ex) {
 
             DbException dbException = new DbException();
-            dbException.setCaused("Error at user creating");
-            dbException.setCode("D2");
+            dbException.setCaused(ErrorSpecifcation.CREATINGERROR.getDetails()+"User");
+            dbException.setCode(ErrorSpecifcation.CREATINGERROR.getCode());
             throw dbException;
         }
         user.setBanEntity(banEntity);

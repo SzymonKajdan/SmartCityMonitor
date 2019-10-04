@@ -121,8 +121,13 @@ public class InitService implements ApplicationListener<ContextRefreshedEvent> {
             userRepository.save(admin);
 
 
+            entity.setCity(cityEntity);
+            entity.setUser(user);
+            reportEntityRepository.save(entity);
             //.save(cityEntity);
             // userRepository.save(user);
+            ReportRatingEntity reportRatingEntity1=new ReportRatingEntity();
+
 
         }
     }
