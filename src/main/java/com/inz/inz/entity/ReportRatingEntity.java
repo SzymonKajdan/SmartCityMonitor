@@ -3,6 +3,7 @@ package com.inz.inz.entity;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "ReportRating")
@@ -22,4 +23,7 @@ public class ReportRatingEntity {
     private int notActiveCounter;
 
     private int falseReportQuantity;
+
+    @OneToMany
+    private List<UserVoted> usersVoted;
 }

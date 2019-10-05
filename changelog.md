@@ -1,4 +1,12 @@
 
+## [0.0.0.3]
+### Changes 
+- add new entity to stroe user votes in mark repeort
+- add new enpoint tp add mark
+- add reprots to get user controller 
+- correct  error seopcifcation 
+
+
 ##[0.0.0.2]
 ### changes
 - add enum errospeciftiation 

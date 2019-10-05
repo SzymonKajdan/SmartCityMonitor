@@ -1,6 +1,9 @@
 package com.inz.inz.seciurity.Resource;
 
+import com.inz.inz.resoruce.ReportLight;
 import lombok.Data;
+
+import java.util.List;
 
 @Data
 public class UserAuthResoruce {
@@ -15,4 +18,6 @@ public class UserAuthResoruce {
     private Boolean isBanned;
 
     private Integer userRating;
+
+    private List<ReportLight> reports;
 }

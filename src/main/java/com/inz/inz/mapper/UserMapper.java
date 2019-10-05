@@ -11,33 +11,39 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.stream.Collectors;
 
-@Mapper(componentModel="spring")
-public abstract class  UserMapper {
+@Mapper(componentModel = "spring")
+public abstract class UserMapper {
 
     @Autowired
     AuthorityRepository authorityRepository;
 
+    @Autowired
+    ReportMapper reportMapper;
+
     @Bean
-    BCryptPasswordEncoder passwordEncoder(){
+    BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
 
     @Mappings({
-            @Mapping(target="username", source="user.username"),
-            @Mapping(target="surname", source="user.lastname"),
-            @Mapping(target = "firstname",source = "user.firstname"),
-            @Mapping(target = "email",source = "user.email"),
+            @Mapping(target = "username", source = "user.username"),
+            @Mapping(target = "surname", source = "user.lastname"),
+            @Mapping(target = "firstname", source = "user.firstname"),
+            @Mapping(target = "email", source = "user.email"),
+            @Mapping(target = "reports", ignore = true)
     })
-   public abstract UserAuthResoruce mapToUserAuthResource(User user);
+    public abstract UserAuthResoruce mapToUserAuthResource(User user);
 
     @AfterMapping
-    protected void fillUserRating(User user, @MappingTarget UserAuthResoruce userAuthResoruce){
+    protected void fillUserRating(User user, @MappingTarget UserAuthResoruce userAuthResoruce) {
 
-        if(user.getBanEntity()!=null){
+        if (user.getBanEntity() != null) {
             userAuthResoruce.setIsBanned(user.getBanEntity().isBanned());
         }
         if (user.getUserRatingEntity() != null) {
@@ -47,18 +53,27 @@ public abstract class  UserMapper {
         }
     }
 
-    @Mappings({
-            @Mapping(target ="email",source = "userResourcePost.email")    ,
-            @Mapping(target = "lastname",source = "userResourcePost.lastname"),
-            @Mapping(target = "firstname",source = "userResourcePost.firstname"),
-            @Mapping(target = "username",source = "userResourcePost.username"),
-            @Mapping(target = "enabled",constant = "true"),
+    @AfterMapping
+    protected void fillUserReports(User user, @MappingTarget UserAuthResoruce userAuthResoruce) {
+        if (user.getReportsList() != null) {
+            userAuthResoruce.setReports(user.getReportsList().stream().map(reportMapper::mapToReportLigth).collect(Collectors.toList()));
+        } else {
+            userAuthResoruce.setReports(new ArrayList<>());
+        }
+    }
 
-            })
+    @Mappings({
+            @Mapping(target = "email", source = "userResourcePost.email"),
+            @Mapping(target = "lastname", source = "userResourcePost.lastname"),
+            @Mapping(target = "firstname", source = "userResourcePost.firstname"),
+            @Mapping(target = "username", source = "userResourcePost.username"),
+            @Mapping(target = "enabled", constant = "true"),
+
+    })
     public abstract User mapUserResourcePostToUser(UserResourcePost userResourcePost);
 
     @AfterMapping
-    protected void fillUser(UserResourcePost post,@MappingTarget User user){
+    protected void fillUser(UserResourcePost post, @MappingTarget User user) {
 
         Authority userRole = authorityRepository.findByName(AuthorityName.ROLE_WORKER);
         user.setAuthorities(Collections.singletonList(userRole));

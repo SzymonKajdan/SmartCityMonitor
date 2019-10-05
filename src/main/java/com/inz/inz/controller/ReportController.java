@@ -3,6 +3,7 @@ package com.inz.inz.controller;
 import com.inz.inz.ExcpetionHandler.DbException;
 import com.inz.inz.ExcpetionHandler.EnumExcpetion;
 import com.inz.inz.adapter.adapterImpl.ReportAdapterImpl;
+import com.inz.inz.resoruce.MarkResourcePost;
 import com.inz.inz.resoruce.ReportResource;
 import com.inz.inz.resoruce.ReportResourcePost;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,12 @@ public class ReportController {
     @PostMapping(value = "/addReport", consumes = MEDIA_TYPE, produces = MEDIA_TYPE )
     public ResponseEntity<?> addReport(@RequestBody @Valid ReportResourcePost reportResourcePost, HttpServletRequest request) throws DbException, EnumExcpetion {
         reportAdapter.createReport(request,reportResourcePost);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @PostMapping(value = "addMark",consumes = MEDIA_TYPE,produces = MEDIA_TYPE)
+    public  ResponseEntity<?> addMark(@RequestBody @Valid MarkResourcePost markResourcePost) throws DbException {
+        reportAdapter.addMArk(markResourcePost);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 }

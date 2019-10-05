@@ -16,4 +16,6 @@ public class ReportLight {
 
     private String video;
 
+    private Boolean isActive;
+
 }

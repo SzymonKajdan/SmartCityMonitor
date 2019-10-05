@@ -32,7 +32,8 @@ public abstract class ReportMapper {
             @Mapping(target = "latitude", source = "res.latitude"),
             @Mapping(target = "description", source = "res.description"),
             @Mapping(target = "photo", source = "res.photo"),
-            @Mapping(target = "video", source = "res.video")
+            @Mapping(target = "video", source = "res.video"),
+            @Mapping(target = "isActive", expression = "java( res.getReportRating().getNotActiveCounter()<10?true:false)")
     })
     public abstract ReportLight mapToReportLigth(ReportEntity res);
 

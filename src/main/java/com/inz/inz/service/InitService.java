@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 
 @Service
@@ -39,6 +40,9 @@ public class InitService implements ApplicationListener<ContextRefreshedEvent> {
 
     @Autowired
     ReportEntityRepository reportEntityRepository;
+
+    @Autowired
+    UserVotedRepository userVotedRepository;
 
 
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
@@ -99,10 +103,16 @@ public class InitService implements ApplicationListener<ContextRefreshedEvent> {
 
             user.setUserRatingEntity(userRatingEntity);
 
+            UserVoted userVoted =new UserVoted();
+            userVotedRepository.save(userVoted);
+
+
             ReportRatingEntity reportRatingEntity = new ReportRatingEntity();
             reportRatingEntity.setMarks(5);
             reportRatingEntity.setQuantity(1);
+            reportRatingEntity.setUsersVoted(Collections.singletonList(userVoted));
             reportRatingEntityRepository.save(reportRatingEntity);
+
 
             ReportEntity entity = new ReportEntity();
             entity.setReportRating(reportRatingEntity);
