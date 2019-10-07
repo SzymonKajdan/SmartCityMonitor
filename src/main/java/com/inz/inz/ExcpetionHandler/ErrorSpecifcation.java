@@ -7,17 +7,19 @@ public enum ErrorSpecifcation {
     RESURCENOTEXIST("Resource exist","0004"),
     OPERATIONNOTALLOWED("Operation not allowed","0006");
 
+
     private String details;
     private String code;
 
     ErrorSpecifcation(String details, String code) {
-
+        this.details=details;
+        this.code=code;
     }
 
     public  String getDetails(){
-        return  this.details;
+        return  details;
     }
     public String getCode(){
-        return this.code;
+        return code;
     }
 }

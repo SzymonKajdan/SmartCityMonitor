@@ -7,6 +7,8 @@ import java.util.List;
 
 @Data
 public class UserAuthResoruce {
+
+    private  Long id;
     private String username;
 
     private String firstname;

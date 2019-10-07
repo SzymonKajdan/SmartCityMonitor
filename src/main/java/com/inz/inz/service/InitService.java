@@ -97,6 +97,7 @@ public class InitService implements ApplicationListener<ContextRefreshedEvent> {
             user.setPassword(encoder.encode("qwerty"));
             user.setAuthorities(new ArrayList<Authority>(Arrays.asList(userRole)));
             user.setReportsList(new ArrayList<>());
+            user.setBanEntity(banEntity);
 
 
             user.setBanEntity(banEntity);
@@ -104,6 +105,7 @@ public class InitService implements ApplicationListener<ContextRefreshedEvent> {
             user.setUserRatingEntity(userRatingEntity);
 
             UserVoted userVoted =new UserVoted();
+            userVoted.setUserId(1l);
             userVotedRepository.save(userVoted);
 
 

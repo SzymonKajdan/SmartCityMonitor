@@ -36,7 +36,8 @@ public abstract class UserMapper {
             @Mapping(target = "surname", source = "user.lastname"),
             @Mapping(target = "firstname", source = "user.firstname"),
             @Mapping(target = "email", source = "user.email"),
-            @Mapping(target = "reports", ignore = true)
+            @Mapping(target = "reports", ignore = true),
+           @Mapping(target = "id",source = "user.id")
     })
     public abstract UserAuthResoruce mapToUserAuthResource(User user);
 
