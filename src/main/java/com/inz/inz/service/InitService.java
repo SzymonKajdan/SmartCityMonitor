@@ -83,6 +83,10 @@ public class InitService implements ApplicationListener<ContextRefreshedEvent> {
             banEntity.setBanned(false);
             banEntityRepository.save(banEntity);
 
+
+            BanEntity adminBan=new BanEntity();
+            banEntityRepository.save(adminBan);
+
             UserRatingEntity userRatingEntity = new UserRatingEntity();
             userRatingRepository.save(userRatingEntity);
 
@@ -112,6 +116,7 @@ public class InitService implements ApplicationListener<ContextRefreshedEvent> {
             ReportRatingEntity reportRatingEntity = new ReportRatingEntity();
             reportRatingEntity.setMarks(5);
             reportRatingEntity.setQuantity(1);
+            reportRatingEntity.setFalseReportQuantity(10);
             reportRatingEntity.setUsersVoted(Collections.singletonList(userVoted));
             reportRatingEntityRepository.save(reportRatingEntity);
 
@@ -130,6 +135,7 @@ public class InitService implements ApplicationListener<ContextRefreshedEvent> {
             user.getReportsList().add(entity);
             userRepository.save(user);
 
+            admin.setBanEntity(adminBan);
             userRepository.save(admin);
 
 

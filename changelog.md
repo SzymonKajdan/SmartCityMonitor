@@ -4,7 +4,8 @@
 - add protection if user is banned and try to add mark or add new report 
 - add new fields to user voted entity
 - add endpoint to mark a reprot is no atctvie
-
+- add endpoints do mark report as false or notactive
+- add cron to checkign ban 
 
 ## [0.0.3]
 ### Changes 

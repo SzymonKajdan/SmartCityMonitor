@@ -48,4 +48,10 @@ public class ReportController {
         reportAdapter.markAsNotActive(notActiveResource);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
+
+    @PostMapping(value = "markAsFalse",consumes = MEDIA_TYPE,produces = MEDIA_TYPE)
+    public ResponseEntity<?> markAsFalse(@RequestBody @Valid NotActiveResource notActiveResource) throws AuthenticationException, ExceptionModel {
+        reportAdapter.markAsFalse(notActiveResource);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
 }

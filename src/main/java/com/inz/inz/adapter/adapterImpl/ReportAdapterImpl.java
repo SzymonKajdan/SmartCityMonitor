@@ -14,6 +14,7 @@ import com.inz.inz.resoruce.ReportResource;
 import com.inz.inz.resoruce.ReportResourcePost;
 import com.inz.inz.seciurity.model.User;
 import com.inz.inz.seciurity.service.UserTokenReciver;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -111,6 +112,24 @@ public class ReportAdapterImpl implements ReportAdapter {
 
     }
 
+    @Override
+    public void markAsFalse(NotActiveResource notActiveResource) throws AuthenticationException, DbException {
+        Optional<User> user = userRepository.findById(notActiveResource.getUserId());
+        Optional<ReportEntity> reportEntity = reportEntityRepository.findById(notActiveResource.getReportId());
+
+        if (user.isPresent()) {
+            checkBanned(user.get());
+            checkReport(reportEntity, user.get().getId());
+            checkisMarkedAsFalse(reportEntity.get(), user.get().getId());
+            setFalseReport(reportEntity.get(), user.get(), notActiveResource);
+            checkReportFalseActivity(reportEntity.get());
+        } else {
+            userNotExist(notActiveResource.getUserId());
+        }
+    }
+
+
+    @Override
     public void markAsNotActive(NotActiveResource notActiveResource) throws ExceptionModel, AuthenticationException {
 
         Optional<User> user = userRepository.findById(notActiveResource.getUserId());
@@ -126,16 +145,51 @@ public class ReportAdapterImpl implements ReportAdapter {
         } else {
             userNotExist(notActiveResource.getUserId());
         }
-
     }
 
-    private void checkReportActivity(ReportEntity reportEntity) {
+
+    private void checkReportFalseActivity(ReportEntity reportEntity) {
         if(reportEntity.getReportRating().getNotActiveCounter()>10){
             User user=reportEntity.getUser();
             ReportRatingEntity reportRatingEntity=reportEntity.getReportRating();
             user.getUserRatingEntity().setMarks(user.getUserRatingEntity().getMarks()+reportRatingEntity.getMarks());
             user.getUserRatingEntity().setQuantity(user.getUserRatingEntity().getQuantity()+reportRatingEntity.getQuantity());
+            user.getBanEntity().setBanCounter(user.getBanEntity().getBanCounter()+1);
+            if(user.getBanEntity().getBanCounter()<3){
+                DateTime dt = new DateTime()
+                        .withHourOfDay(12)
+                        .withMinuteOfHour(00)
+                        .withSecondOfMinute(0);
+                dt= dt.plusDays(1);
+                user.getBanEntity().setDate(dt.toDate());
+            }else {
+                DateTime dt = new DateTime()
+                        .withHourOfDay(12)
+                        .withMinuteOfHour(00)
+                        .withSecondOfMinute(0);
+                dt=dt.plusDays(365);
+                user.getBanEntity().setDate(dt.toDate());
+            }
+            user.getBanEntity().setBanned(true);
             userRepository.save(user);
+        }
+    }
+
+    private void setFalseReport(ReportEntity reportEntity, User user, NotActiveResource notActiveResource) {
+        UserVoted userVoted = reportEntity.getReportRating().getUsersVoted().stream().filter(x -> x.getUserId().equals(user.getId())).findAny().orElse(null);
+        if (userVoted == null) {
+            userVoted = new UserVoted();
+            userVoted.setUserId(user.getId());
+            userVoted.setFalse(true);
+            userVotedRepository.save(userVoted);
+            reportEntity.getReportRating().getUsersVoted().add(userVoted);
+            reportEntity.getReportRating().setNotActiveCounter(reportEntity.getReportRating().getFalseReportQuantity()+1);
+            reportEntityRepository.save(reportEntity);
+        } else {
+            userVoted.setFalse(true);
+            userVotedRepository.save(userVoted);
+            reportEntity.getReportRating().setNotActiveCounter(reportEntity.getReportRating().getFalseReportQuantity()+1);
+            reportEntityRepository.save(reportEntity);
         }
     }
 
@@ -155,6 +209,28 @@ public class ReportAdapterImpl implements ReportAdapter {
             userVotedRepository.save(userVoted);
             reportEntity.getReportRating().setNotActiveCounter(reportEntity.getReportRating().getNotActiveCounter()+1);
             reportEntityRepository.save(reportEntity);
+        }
+    }
+
+    private void checkReportActivity(ReportEntity reportEntity) {
+        if(reportEntity.getReportRating().getNotActiveCounter()>10){
+            User user=reportEntity.getUser();
+            ReportRatingEntity reportRatingEntity=reportEntity.getReportRating();
+            user.getUserRatingEntity().setMarks(user.getUserRatingEntity().getMarks()+reportRatingEntity.getMarks());
+            user.getUserRatingEntity().setQuantity(user.getUserRatingEntity().getQuantity()+reportRatingEntity.getQuantity());
+            userRepository.save(user);
+        }
+    }
+
+    private void checkisMarkedAsFalse(ReportEntity reportEntity, Long userId) throws DbException {
+        UserVoted userVoted = reportEntity.getReportRating()
+                .getUsersVoted()
+                .stream()
+                .filter(
+                        x -> x.getUserId().equals(userId) && x.isFalse()
+                ).findAny().orElse(null);
+        if (userVoted != null) {
+            throw new DbException(ErrorSpecifcation.OPERATIONNOTALLOWED.getDetails(), ErrorSpecifcation.OPERATIONNOTALLOWED.getCode(), new Field(), HttpStatus.UNPROCESSABLE_ENTITY);
         }
     }
 
