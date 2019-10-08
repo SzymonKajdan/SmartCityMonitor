@@ -1,4 +1,4 @@
-package com.inz.inz.ExcpetionHandler;
+package com.inz.inz.exceptionhandler;
 
 import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.LogManager;

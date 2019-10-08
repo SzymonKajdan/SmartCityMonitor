@@ -1,6 +1,7 @@
 package com.inz.inz.entity.enums;
 
 public enum ReportType {
+
     VANDALISM("wandalizm"),
     HOLE_IN_THE_ROAD("dziura w drodze"),
     COLLISION("kolizja"),
@@ -8,7 +9,17 @@ public enum ReportType {
     INAPPROPRIATE_BEHAVIURS("niedozowlone zachowanie"),
     POTENTIAL_BULLYING("potęcjalne łamanie prawa(zastraszanie)");
 
-    ReportType(String wandlalizm) {
+    private String type;
 
+    ReportType(String type) {
+        this.type=type;
+    }
+
+    public  String getType(){
+        return type;
+    }
+
+    public void setType(String type){
+       this.type=type;
     }
 }

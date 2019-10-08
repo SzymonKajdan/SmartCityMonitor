@@ -1,4 +1,4 @@
-package com.inz.inz.ExcpetionHandler;
+package com.inz.inz.exceptionhandler;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

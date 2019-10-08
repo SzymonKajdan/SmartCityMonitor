@@ -1,4 +1,4 @@
-package com.inz.inz.ExcpetionHandler;
+package com.inz.inz.exceptionhandler;
 
 public enum ErrorSpecifcation {
     NOTSUPPORTEDMETHOD("Method not supported","0001"),

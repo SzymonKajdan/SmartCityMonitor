@@ -1,4 +1,4 @@
-package com.inz.inz.ExcpetionHandler;
+package com.inz.inz.exceptionhandler;
 
 public class EnumExcpetion extends ExceptionModel {
 

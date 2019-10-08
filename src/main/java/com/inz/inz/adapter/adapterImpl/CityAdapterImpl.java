@@ -1,7 +1,7 @@
 package com.inz.inz.adapter.adapterImpl;
 
-import com.inz.inz.ExcpetionHandler.DbException;
-import com.inz.inz.ExcpetionHandler.ErrorSpecifcation;
+import com.inz.inz.exceptionhandler.DbException;
+import com.inz.inz.exceptionhandler.ErrorSpecifcation;
 import com.inz.inz.adapter.CityAdapter;
 import com.inz.inz.entity.CityEntity;
 import com.inz.inz.mapper.CityMapper;
@@ -28,7 +28,7 @@ public class CityAdapterImpl implements CityAdapter {
     @Override
     public List<CityResourceGetLight> getCities() throws DbException {
             List<CityEntity> cityEntities = cityEntityRepository.findAll();
-            if (cityEntities != null) {
+            if (cityEntities.isEmpty()) {
                 return cityEntities.stream().map(cityMapper::mapToCityResourceGetLight).collect(Collectors.toList());
             } else {
                 throw new DbException(ErrorSpecifcation.RESURCENOTEXIST.getDetails(), ErrorSpecifcation.RESURCENOTEXIST.getCode(), null, HttpStatus.NOT_FOUND);

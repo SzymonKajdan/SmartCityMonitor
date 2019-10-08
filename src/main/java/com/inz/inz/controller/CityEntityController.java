@@ -1,6 +1,6 @@
 package com.inz.inz.controller;
 
-import com.inz.inz.ExcpetionHandler.DbException;
+import com.inz.inz.exceptionhandler.DbException;
 import com.inz.inz.adapter.adapterImpl.CityAdapterImpl;
 import com.inz.inz.resoruce.CityResource;
 import com.inz.inz.resoruce.CityResourceGetLight;

@@ -1,6 +1,6 @@
 package com.inz.inz.seciurity.controller;
 
-import com.inz.inz.ExcpetionHandler.DbException;
+import com.inz.inz.exceptionhandler.DbException;
 import com.inz.inz.seciurity.AdapterImpl.UserAdapterImpl;
 import com.inz.inz.seciurity.Resource.UserResourcePost;
 import com.inz.inz.seciurity.jwt.JwtUser;

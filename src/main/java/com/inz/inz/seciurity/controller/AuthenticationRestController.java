@@ -1,7 +1,7 @@
 package com.inz.inz.seciurity.controller;
 
 
-import com.inz.inz.ExcpetionHandler.AuthenticationException;
+import com.inz.inz.exceptionhandler.AuthenticationException;
 import com.inz.inz.repository.UserRepository;
 import com.inz.inz.seciurity.AdapterImpl.UserAdapterImpl;
 import com.inz.inz.seciurity.Resource.UserAuthResoruce;

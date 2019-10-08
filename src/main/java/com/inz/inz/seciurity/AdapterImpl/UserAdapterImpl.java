@@ -1,7 +1,7 @@
 package com.inz.inz.seciurity.AdapterImpl;
 
-import com.inz.inz.ExcpetionHandler.DbException;
-import com.inz.inz.ExcpetionHandler.ErrorSpecifcation;
+import com.inz.inz.exceptionhandler.DbException;
+import com.inz.inz.exceptionhandler.ErrorSpecifcation;
 import com.inz.inz.entity.BanEntity;
 import com.inz.inz.entity.UserRatingEntity;
 import com.inz.inz.mapper.UserMapper;

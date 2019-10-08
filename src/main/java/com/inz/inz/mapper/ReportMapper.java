@@ -1,9 +1,9 @@
 package com.inz.inz.mapper;
 
-import com.inz.inz.ExcpetionHandler.DbException;
-import com.inz.inz.ExcpetionHandler.EnumExcpetion;
-import com.inz.inz.ExcpetionHandler.ErrorSpecifcation;
-import com.inz.inz.ExcpetionHandler.Field;
+import com.inz.inz.exceptionhandler.DbException;
+import com.inz.inz.exceptionhandler.EnumExcpetion;
+import com.inz.inz.exceptionhandler.ErrorSpecifcation;
+import com.inz.inz.exceptionhandler.Field;
 import com.inz.inz.entity.CityEntity;
 import com.inz.inz.entity.ReportEntity;
 import com.inz.inz.entity.enums.ReportType;

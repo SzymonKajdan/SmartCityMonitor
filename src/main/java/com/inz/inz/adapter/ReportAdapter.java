@@ -1,9 +1,9 @@
 package com.inz.inz.adapter;
 
-import com.inz.inz.ExcpetionHandler.AuthenticationException;
-import com.inz.inz.ExcpetionHandler.DbException;
-import com.inz.inz.ExcpetionHandler.EnumExcpetion;
-import com.inz.inz.ExcpetionHandler.ExceptionModel;
+import com.inz.inz.exceptionhandler.AuthenticationException;
+import com.inz.inz.exceptionhandler.DbException;
+import com.inz.inz.exceptionhandler.EnumExcpetion;
+import com.inz.inz.exceptionhandler.ExceptionModel;
 import com.inz.inz.entity.ReportEntity;
 import com.inz.inz.resoruce.MarkResourcePost;
 import com.inz.inz.resoruce.NotActiveResource;

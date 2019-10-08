@@ -1,6 +1,6 @@
 package com.inz.inz.adapter.adapterImpl;
 
-import com.inz.inz.ExcpetionHandler.*;
+import com.inz.inz.exceptionhandler.*;
 import com.inz.inz.adapter.ReportAdapter;
 import com.inz.inz.entity.CityEntity;
 import com.inz.inz.entity.ReportEntity;
@@ -57,7 +57,7 @@ public class ReportAdapterImpl implements ReportAdapter {
         checkBanned(userRepository.getOne(id));
 
         try {
-            reportEntity = save(reportEntity, id);
+            save(reportEntity, id);
         } catch (DataIntegrityViolationException ex) {
             DbException dbException = new DbException();
             dbException.setCaused(ErrorSpecifcation.CREATINGERROR.getDetails() + " Report");
@@ -121,7 +121,7 @@ public class ReportAdapterImpl implements ReportAdapter {
             checkBanned(user.get());
             checkReport(reportEntity, user.get().getId());
             checkisMarkedAsFalse(reportEntity.get(), user.get().getId());
-            setFalseReport(reportEntity.get(), user.get(), notActiveResource);
+            setFalseReport(reportEntity.get(), user.get());
             checkReportFalseActivity(reportEntity.get());
         } else {
             userNotExist(notActiveResource.getUserId());
@@ -139,7 +139,7 @@ public class ReportAdapterImpl implements ReportAdapter {
             checkBanned(user.get());
             checkReport(reportEntity, user.get().getId());
             checkIsMarkedAsNotActive(reportEntity.get(), user.get().getId());
-            setNotActive(reportEntity.get(), user.get(), notActiveResource);
+            setNotActive(reportEntity.get(), user.get());
             checkReportActivity(reportEntity.get());
 
         } else {
@@ -175,7 +175,7 @@ public class ReportAdapterImpl implements ReportAdapter {
         }
     }
 
-    private void setFalseReport(ReportEntity reportEntity, User user, NotActiveResource notActiveResource) {
+    private void setFalseReport(ReportEntity reportEntity, User user) {
         UserVoted userVoted = reportEntity.getReportRating().getUsersVoted().stream().filter(x -> x.getUserId().equals(user.getId())).findAny().orElse(null);
         if (userVoted == null) {
             userVoted = new UserVoted();
@@ -194,7 +194,7 @@ public class ReportAdapterImpl implements ReportAdapter {
     }
 
 
-    private void setNotActive(ReportEntity reportEntity, User user, NotActiveResource notActiveResource) {
+    private void setNotActive(ReportEntity reportEntity, User user) {
         UserVoted userVoted = reportEntity.getReportRating().getUsersVoted().stream().filter(x -> x.getUserId().equals(user.getId())).findAny().orElse(null);
         if (userVoted == null) {
             userVoted = new UserVoted();
@@ -288,7 +288,7 @@ public class ReportAdapterImpl implements ReportAdapter {
             throw new DbException(ErrorSpecifcation.RESURCENOTEXIST.getDetails(), ErrorSpecifcation.RESURCENOTEXIST.getCode(), field);
         }
 
-        if (reportEntity.get().getUser().getId() == id) {
+        if (id!=null && reportEntity.get().getUser().getId().equals(id)) {
             Field field = new Field();
             field.setDetails("You cannot mark your report");
             throw new DbException(ErrorSpecifcation.OPERATIONNOTALLOWED.getDetails(), ErrorSpecifcation.OPERATIONNOTALLOWED.getCode(), field, HttpStatus.UNPROCESSABLE_ENTITY);
@@ -296,13 +296,16 @@ public class ReportAdapterImpl implements ReportAdapter {
     }
 
     private void checkMarked(Optional<ReportEntity> reportEntity, Long id) throws DbException {
-        List<UserVoted> votedList = reportEntity.get().getReportRating().getUsersVoted();
-        UserVoted userVoted = votedList.stream().filter(x -> x.getUserId().equals(id) && x.isMarked()).findAny().orElse(null);
 
-        if (userVoted != null) {
-            Field field = new Field();
-            field.setDetails("You cannot mark report again");
-            throw new DbException(ErrorSpecifcation.OPERATIONNOTALLOWED.getDetails(), ErrorSpecifcation.OPERATIONNOTALLOWED.getCode(), field, HttpStatus.UNPROCESSABLE_ENTITY);
+        if(reportEntity.isPresent()) {
+            List<UserVoted> votedList = reportEntity.get().getReportRating().getUsersVoted();
+            UserVoted userVoted = votedList.stream().filter(x -> x.getUserId().equals(id) && x.isMarked()).findAny().orElse(null);
+
+            if (userVoted != null) {
+                Field field = new Field();
+                field.setDetails("You cannot mark report again");
+                throw new DbException(ErrorSpecifcation.OPERATIONNOTALLOWED.getDetails(), ErrorSpecifcation.OPERATIONNOTALLOWED.getCode(), field, HttpStatus.UNPROCESSABLE_ENTITY);
+            }
         }
     }
 

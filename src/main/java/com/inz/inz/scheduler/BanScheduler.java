@@ -3,6 +3,9 @@ package com.inz.inz.scheduler;
 import com.inz.inz.repository.BanEntityRepository;
 import com.inz.inz.repository.UserRepository;
 import com.inz.inz.seciurity.model.User;
+import lombok.extern.log4j.Log4j2;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -14,6 +17,7 @@ import java.util.List;
 
 @Configuration
 @EnableScheduling
+@Log4j2
 public class BanScheduler {
 
     @Autowired
@@ -21,11 +25,13 @@ public class BanScheduler {
     @Autowired
     BanEntityRepository banEntityRepository;
 
+    Logger logger = LogManager.getLogger(BanScheduler.class);
+
     //0 0 12 * * ?
     @Scheduled(cron = "0 * * ? * *")
     public void checkBans() {
         List<User> users = userRepository.findAll();
-        if (users != null) {
+        if (!users.isEmpty()) {
             users.stream().forEach(x -> {
                 if (x.getBanEntity().isBanned()) {
                     Date date = x.getBanEntity().getDate();
@@ -40,6 +46,6 @@ public class BanScheduler {
             });
         }
 
-        System.out.println(users.stream().filter(x -> x.getBanEntity().isBanned()).count());
+        logger.info(" banned user "+users.stream().filter(x->x.getBanEntity().isBanned()).count());
     }
 }
