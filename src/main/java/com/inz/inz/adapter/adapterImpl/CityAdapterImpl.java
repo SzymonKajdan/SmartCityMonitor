@@ -27,31 +27,29 @@ public class CityAdapterImpl implements CityAdapter {
 
     @Override
     public List<CityResourceGetLight> getCities() throws DbException {
-            List<CityEntity> cityEntities = cityEntityRepository.findAll();
-            if (cityEntities.isEmpty()) {
-                return cityEntities.stream().map(cityMapper::mapToCityResourceGetLight).collect(Collectors.toList());
-            } else {
-                throw new DbException(ErrorSpecifcation.RESURCENOTEXIST.getDetails(), ErrorSpecifcation.RESURCENOTEXIST.getCode(), null, HttpStatus.NOT_FOUND);
-            }
+        List<CityEntity> cityEntities = cityEntityRepository.findAll();
+        if (!cityEntities.isEmpty()) {
+            return cityEntities.stream().map(cityMapper::mapToCityResourceGetLight).collect(Collectors.toList());
+        } else {
+            throw new DbException(ErrorSpecifcation.RESURCENOTEXIST.getDetails(), ErrorSpecifcation.RESURCENOTEXIST.getCode(), null, HttpStatus.NOT_FOUND);
         }
-
+    }
 
 
     @Override
-        public CityResource getCity(Long id, boolean reportsAcitve) throws DbException {
-            Optional<CityEntity> cityEntity = cityEntityRepository.findById(id);
+    public CityResource getCity(Long id, boolean reportsAcitve) throws DbException {
+        Optional<CityEntity> cityEntity = cityEntityRepository.findById(id);
 
-            if (cityEntity.isPresent()) {
-                if (reportsAcitve) {
+        if (cityEntity.isPresent()) {
+            if (reportsAcitve) {
 
-                          cityEntity.get().setReportList( cityEntity.get().getReportList().stream().filter(
-                                   x->x.getReportRating().getNotActiveCounter()<10&&x.getReportRating().getFalseReportQuantity()<10
-                   ).collect(Collectors.toList()));
-
-                }
-                return cityMapper.mapToCityResource(cityEntity.get());
-            } else {
-                throw new DbException(ErrorSpecifcation.RESURCENOTEXIST.getDetails(), ErrorSpecifcation.RESURCENOTEXIST.getCode(), null, HttpStatus.NOT_FOUND);
+                cityEntity.get().setReportList(cityEntity.get().getReportList().stream().filter(
+                        x -> x.getReportRating().getNotActiveCounter() < 10 && x.getReportRating().getFalseReportQuantity() < 10
+                ).collect(Collectors.toList()));
             }
+            return cityMapper.mapToCityResource(cityEntity.get());
+        } else {
+            throw new DbException(ErrorSpecifcation.RESURCENOTEXIST.getDetails(), ErrorSpecifcation.RESURCENOTEXIST.getCode(), null, HttpStatus.NOT_FOUND);
         }
     }
+}

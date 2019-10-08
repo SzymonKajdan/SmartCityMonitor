@@ -62,6 +62,7 @@ public class ReportAdapterImpl implements ReportAdapter {
             DbException dbException = new DbException();
             dbException.setCaused(ErrorSpecifcation.CREATINGERROR.getDetails() + " Report");
             dbException.setCode(ErrorSpecifcation.CREATINGERROR.getCode());
+            throw dbException;
         }
         return reportEntity;
     }
