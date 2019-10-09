@@ -270,7 +270,7 @@ public class ReportAdapterImpl implements ReportAdapter {
             reportEntityRepository.save(reportEntity);
 
         } else {
-            UserVoted userVoted = new UserVoted();
+            UserVoted userVoted = userVotedRepository.findByUserId(userId).get();
             userVoted.setMarked(true);
             userVoted.setUserId(userId);
             userVotedRepository.save(userVoted);

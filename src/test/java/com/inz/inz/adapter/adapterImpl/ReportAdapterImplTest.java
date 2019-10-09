@@ -1,15 +1,13 @@
 package com.inz.inz.adapter.adapterImpl;
 
-import com.inz.inz.entity.BanEntity;
-import com.inz.inz.entity.CityEntity;
-import com.inz.inz.entity.ReportEntity;
-import com.inz.inz.entity.ReportRatingEntity;
+import com.inz.inz.entity.*;
 import com.inz.inz.entity.enums.ReportType;
 import com.inz.inz.exceptionhandler.AuthenticationException;
 import com.inz.inz.exceptionhandler.DbException;
 import com.inz.inz.exceptionhandler.EnumExcpetion;
 import com.inz.inz.mapper.ReportMapper;
 import com.inz.inz.repository.*;
+import com.inz.inz.resoruce.MarkResourcePost;
 import com.inz.inz.resoruce.ReportResource;
 import com.inz.inz.resoruce.ReportResourcePost;
 import com.inz.inz.seciurity.model.User;
@@ -70,6 +68,7 @@ public class ReportAdapterImplTest {
         reportEntity.setReportType(ReportType.VANDALISM);
         reportEntity.setUser(getUser());
         reportEntity.setCity(cityEntity());
+        reportEntity.setReportRating(reportRatingEntity() );
         return reportEntity;
     }
 
@@ -92,6 +91,22 @@ public class ReportAdapterImplTest {
         cityEntity.setId(1l);
         cityEntity.setReportList(new ArrayList<>());
         return cityEntity;
+    }
+
+    private  static  ReportRatingEntity reportRatingEntity(){
+        ReportRatingEntity ratingEntity=new ReportRatingEntity();
+        ratingEntity.setUsersVoted(new ArrayList<>());
+        ratingEntity.getUsersVoted().add(userVoted());
+        ratingEntity.setId(1l);
+        ratingEntity.setMarks(5);
+        ratingEntity.setQuantity(1);
+        return ratingEntity;
+    }
+    private static UserVoted userVoted(){
+        UserVoted userVoted=new UserVoted();
+        userVoted.setMarked(false);
+        userVoted.setUserId(1l);
+        return userVoted;
     }
     @Test
     public void createReportTest() throws DbException, EnumExcpetion, AuthenticationException {
@@ -135,5 +150,117 @@ public class ReportAdapterImplTest {
         ReportResource  reportResource=adapter.getReport(1l);
         assertNotNull(reportResource);
     }
+    @Test(expected = DbException.class)
+    public  void getReportFailureTest() throws DbException {
+
+        when(reportMapper.mapToReport(getReportEntity())).thenReturn(new ReportResource());
+        ReportResource  reportResource=adapter.getReport(1l);
+
+    }
+
+    @Test
+    public  void addMarkTest() throws DbException, AuthenticationException {
+
+        User user=getUser();
+        user.setId(2l);
+
+
+        when(userRepository.findById(2l)).thenReturn(Optional.of(user));
+        when(reportEntityRepository.findById(1l)).thenReturn(Optional.ofNullable(getReportEntity()));
+        MarkResourcePost markResourcePost=new MarkResourcePost();
+        markResourcePost.setMark(5);
+        markResourcePost.setReportId(1l);
+        markResourcePost.setUserId(2l);
+
+        adapter.addMArk(markResourcePost);
+
+        ReportEntity reportEntity=getReportEntity();
+        reportEntity.getReportRating().getUsersVoted().get(0).setUserId(2l);
+        when(userVotedRepository.findByUserId(2l)).thenReturn(Optional.ofNullable(userVoted()));
+        when(reportEntityRepository.findById(1l)).thenReturn(Optional.ofNullable(reportEntity));
+        adapter.addMArk(markResourcePost);
+    }
+
+    @Test(expected = DbException.class)
+    public void addMarkFailTest() throws DbException, AuthenticationException {
+        User user=getUser();
+        user.setId(1l);
+        when(userRepository.findById(1l)).thenReturn(Optional.of(user));
+        when(reportEntityRepository.findById(1l)).thenReturn(Optional.ofNullable(getReportEntity()));
+        MarkResourcePost markResourcePost=new MarkResourcePost();
+        markResourcePost.setMark(5);
+        markResourcePost.setReportId(1l);
+        markResourcePost.setUserId(1l);
+
+        adapter.addMArk(markResourcePost);
+    }
+
+    @Test(expected = DbException.class)
+    public void notReportExist() throws DbException, AuthenticationException {
+        User user=getUser();
+        user.setId(1l);
+        when(userRepository.findById(1l)).thenReturn(Optional.of(user));
+        when(reportEntityRepository.findById(1l)).thenReturn(Optional.ofNullable(null));
+        MarkResourcePost markResourcePost=new MarkResourcePost();
+        markResourcePost.setMark(5);
+        markResourcePost.setReportId(1l);
+        markResourcePost.setUserId(2l);
+
+        adapter.addMArk(markResourcePost);
+    }
+
+    @Test(expected = DbException.class)
+    public void secondMarkAndTest() throws DbException, AuthenticationException {
+        User user=getUser();
+        user.setId(2l);
+        ReportEntity reportEntity=getReportEntity();
+        reportEntity.getReportRating().getUsersVoted().get(0).setUserId(2l);
+        reportEntity.getReportRating().getUsersVoted().get(0).setMarked(true);
+        when(userRepository.findById(2l)).thenReturn(Optional.of(user));
+        when(reportEntityRepository.findById(1l)).thenReturn(Optional.ofNullable(reportEntity));
+        MarkResourcePost markResourcePost=new MarkResourcePost();
+        markResourcePost.setMark(5);
+        markResourcePost.setReportId(1l);
+        markResourcePost.setUserId(2l);
+
+        adapter.addMArk(markResourcePost);
+
+
+    }
+
+    @Test(expected = DbException.class)
+    public  void  checkReportTest() throws DbException, AuthenticationException {
+        User user=getUser();
+        user.setId(2l);
+        ReportEntity reportEntity=getReportEntity();
+        reportEntity.getReportRating().getUsersVoted().get(0).setUserId(2l);
+        reportEntity.getReportRating().getUsersVoted().get(0).setMarked(true);
+        reportEntity.setUser(user);
+        when(userRepository.findById(2l)).thenReturn(Optional.of(user));
+        when(reportEntityRepository.findById(1l)).thenReturn(Optional.ofNullable(reportEntity));
+        MarkResourcePost markResourcePost=new MarkResourcePost();
+        markResourcePost.setMark(5);
+        markResourcePost.setReportId(1l);
+        markResourcePost.setUserId(2l);
+
+        adapter.addMArk(markResourcePost);
+    }
+
+    @Test(expected = DbException.class)
+    public  void  checkReportSecondTest() throws DbException, AuthenticationException {
+        User user=getUser();
+        user.setId(2l);
+        when(userRepository.findById(2l)).thenReturn(Optional.of(user));
+        when(reportEntityRepository.findById(1l)).thenReturn(Optional.ofNullable(null));
+        MarkResourcePost markResourcePost=new MarkResourcePost();
+        markResourcePost.setMark(5);
+        markResourcePost.setReportId(1l);
+        markResourcePost.setUserId(2l);
+
+        adapter.addMArk(markResourcePost);
+    }
+
+
+
 
 }

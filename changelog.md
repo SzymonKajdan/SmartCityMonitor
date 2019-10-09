@@ -1,8 +1,9 @@
 
 ## [0.0.5]
 ## changes 
--clean code 
-
+- clean code 
+- add test
+- fix user votded save bug 
 
 ## [0.0.4]
 ### Changes
