@@ -11,7 +11,7 @@ public abstract class ReportRatingMapper {
 
     @Mappings({
             @Mapping(target = "mark", expression = "java(reportRatingEntity.getQuantity()!=0?reportRatingEntity.getMarks()/reportRatingEntity.getQuantity():0.0)"),
-            @Mapping(target = "isActive", expression = "java(reportRatingEntity.getNotActiveCounter()<10?true:false)")
+            @Mapping(target = "isActive", expression = "java(reportRatingEntity.getNotActiveCounter()<10&& reportRatingEntity.getFalseReportQuantity()<10?true:false)")
     })
     public abstract ReportRatingResource mapToReportRatingResource(ReportRatingEntity reportRatingEntity);
 

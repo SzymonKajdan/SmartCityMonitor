@@ -14,7 +14,6 @@ public class ReportResource extends ReportLight {
 
     private Double mark;
 
-    private Boolean isActive;
 
     private Long userId;
 

@@ -4,6 +4,8 @@
 - clean code 
 - add test
 - fix user votded save bug 
+- chnage logic of mappers 
+
 
 ## [0.0.4]
 ### Changes

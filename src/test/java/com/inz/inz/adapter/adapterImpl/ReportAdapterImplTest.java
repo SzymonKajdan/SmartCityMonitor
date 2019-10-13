@@ -1,13 +1,14 @@
 package com.inz.inz.adapter.adapterImpl;
 
 import com.inz.inz.entity.*;
-import com.inz.inz.entity.enums.ReportType;
 import com.inz.inz.exceptionhandler.AuthenticationException;
 import com.inz.inz.exceptionhandler.DbException;
 import com.inz.inz.exceptionhandler.EnumExcpetion;
+import com.inz.inz.exceptionhandler.ExceptionModel;
 import com.inz.inz.mapper.ReportMapper;
 import com.inz.inz.repository.*;
 import com.inz.inz.resoruce.MarkResourcePost;
+import com.inz.inz.resoruce.NotActiveResource;
 import com.inz.inz.resoruce.ReportResource;
 import com.inz.inz.resoruce.ReportResourcePost;
 import com.inz.inz.seciurity.model.User;
@@ -18,249 +19,499 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
-
-@RunWith(SpringRunner.class)
 @SpringBootTest()
+@RunWith(SpringRunner.class)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+
 public class ReportAdapterImplTest {
 
+
+    @Autowired
+    BanEntityRepository banEntityRepository;
     @MockBean
     UserTokenReciver userTokenRecvier;
 
-    @MockBean
+
+    @Autowired
     ReportMapper reportMapper;
 
-    @MockBean
+    @Autowired
     UserRepository userRepository;
 
-    @MockBean
+    @Autowired
     ReportRatingEntityRepository reportRatingEntityRepository;
 
-    @MockBean
+    @Autowired
     ReportEntityRepository reportEntityRepository;
 
-    @MockBean
+    @Autowired
     CityEntityRepository cityEntityRepository;
 
-    @MockBean
+    @Autowired
     UserVotedRepository userVotedRepository;
 
     @MockBean
     private InitService startupConfiguration;
+
     @Autowired
     ReportAdapterImpl adapter;
 
-    public  static ReportEntity getReportEntity(){
-        ReportEntity reportEntity=new ReportEntity();
-        reportEntity.setId(1l);
-        reportEntity.setReportType(ReportType.VANDALISM);
-        reportEntity.setUser(getUser());
-        reportEntity.setCity(cityEntity());
-        reportEntity.setReportRating(reportRatingEntity() );
-        return reportEntity;
+    @Autowired
+    UserRatingRepository userRatingRepository;
+
+    private void init(boolean good) {
+
+        if (good) {
+            UserRatingEntity ratingEntity=new UserRatingEntity();
+            userRatingRepository.save(ratingEntity);
+
+            BanEntity banEntity = new BanEntity();
+            banEntityRepository.save(banEntity);
+
+            User user = new User();
+            user.setUserRatingEntity(ratingEntity);
+            user.setBanEntity(banEntity);
+            userRepository.save(user);
+
+            CityEntity cityEntity = new CityEntity();
+            cityEntity.setReportList(new ArrayList<>());
+            cityEntity.setName("lodz");
+            cityEntityRepository.save(cityEntity);
+        } else {
+            BanEntity banEntity = new BanEntity();
+            banEntityRepository.save(banEntity);
+            User user = new User();
+            user.setBanEntity(banEntity);
+            userRepository.save(user);
+            CityEntity cityEntity = new CityEntity();
+            cityEntity.setReportList(null);
+            cityEntity.setName("lodz");
+            cityEntityRepository.save(cityEntity);
+        }
+
     }
 
-    private static User getUser() {
-    User user=new User();
-    user.setId(1l);
-    user.setBanEntity(getBan());
-    user.setReportsList(new ArrayList<>());
-    return user;
+
+    private void initreports() {
+        ReportRatingEntity reportRatingEntity = new ReportRatingEntity();
+        reportRatingEntity.setUsersVoted(new ArrayList<>());
+        reportRatingEntityRepository.save(reportRatingEntity);
+
+        ReportEntity reportEntity = new ReportEntity();
+        reportEntity.setUser(userRepository.findById(1l).get());
+        reportEntity.setCity(cityEntityRepository.findByName("lodz").get());
+        reportEntity.setDateReport(new Date());
+        reportEntity.setReportRating(reportRatingEntity);
+        reportEntityRepository.save(reportEntity);
     }
 
-    private static BanEntity getBan() {
-        BanEntity banEntity=new BanEntity();
-        return banEntity;
-    }
-
-    private static  CityEntity cityEntity(){
-        CityEntity cityEntity=new CityEntity();
-        cityEntity.setName("lds");
-        cityEntity.setId(1l);
-        cityEntity.setReportList(new ArrayList<>());
-        return cityEntity;
-    }
-
-    private  static  ReportRatingEntity reportRatingEntity(){
-        ReportRatingEntity ratingEntity=new ReportRatingEntity();
-        ratingEntity.setUsersVoted(new ArrayList<>());
-        ratingEntity.getUsersVoted().add(userVoted());
-        ratingEntity.setId(1l);
-        ratingEntity.setMarks(5);
-        ratingEntity.setQuantity(1);
-        return ratingEntity;
-    }
-    private static UserVoted userVoted(){
-        UserVoted userVoted=new UserVoted();
-        userVoted.setMarked(false);
-        userVoted.setUserId(1l);
-        return userVoted;
-    }
     @Test
     public void createReportTest() throws DbException, EnumExcpetion, AuthenticationException {
-        HttpServletRequest servletRequest=new HttpServletRequestWrapper(new MockHttpServletRequest());
+        init(true);
+        HttpServletRequest servletRequest = new HttpServletRequestWrapper(new MockHttpServletRequest());
         when(userTokenRecvier.getUserId(servletRequest)).thenReturn(1l);
-        when(reportMapper.mapToEntity(new ReportResourcePost())).thenReturn(getReportEntity());
-        when(userRepository.getOne(1l)).thenReturn(getUser());
-        when(cityEntityRepository.findByName(cityEntity().getName())).thenReturn(java.util.Optional.ofNullable(cityEntity()));
 
-        ReportEntity reportEntity=adapter.createReport(servletRequest,new ReportResourcePost());
 
-        assertEquals(getReportEntity().getId(),reportEntity.getId());
+        ReportResourcePost post = new ReportResourcePost();
+        post.setCityName("lodz");
+        post.setDescription("ada");
+        post.setReportType("VANDALISM");
+        ReportEntity reportEntity = adapter.createReport(servletRequest, post);
+
+        assertEquals(Long.valueOf(1l), reportEntity.getId());
     }
-    @Test(expected = DbException.class)
-    public void createReportSavingExceptionTest() throws DbException, EnumExcpetion, AuthenticationException {
-        HttpServletRequest servletRequest=new HttpServletRequestWrapper(new MockHttpServletRequest());
-        when(userTokenRecvier.getUserId(servletRequest)).thenReturn(1l);
-        when(reportMapper.mapToEntity(new ReportResourcePost())).thenReturn(getReportEntity());
-        when(userRepository.getOne(1l)).thenReturn(getUser());
-        when(cityEntityRepository.findByName(cityEntity().getName())).thenReturn(java.util.Optional.ofNullable(cityEntity()));
-        when(reportRatingEntityRepository.save(new ReportRatingEntity())).thenThrow(DataIntegrityViolationException.class);
-        ReportEntity reportEntity=adapter.createReport(servletRequest,new ReportResourcePost());
 
-    }
+
     @Test(expected = AuthenticationException.class)
-    public void createReportByBannedUser() throws DbException, EnumExcpetion, AuthenticationException {
-        HttpServletRequest servletRequest=new HttpServletRequestWrapper(new MockHttpServletRequest());
-        User user=getUser();
-        user.getBanEntity().setBanned(true);
-        when(userTokenRecvier.getUserId(servletRequest)).thenReturn(1l);
-        when(reportMapper.mapToEntity(new ReportResourcePost())).thenReturn(getReportEntity());
-        when(userRepository.getOne(1l)).thenReturn(user);
+    public void createReportByBannedUser() throws AuthenticationException, DbException, EnumExcpetion {
+        HttpServletRequest servletRequest = new HttpServletRequestWrapper(new MockHttpServletRequest());
 
-       adapter.createReport(servletRequest,new ReportResourcePost());
+        init(true);
+        ReportResourcePost post = new ReportResourcePost();
+
+        post.setCityName("lodz");
+        post.setDescription("ada");
+        post.setReportType("VANDALISM");
+        User user = userRepository.findById(1l).get();
+
+        user.getBanEntity().setBanned(true);
+        banEntityRepository.save(user.getBanEntity());
+        when(userTokenRecvier.getUserId(servletRequest)).thenReturn(1l);
+
+
+        adapter.createReport(servletRequest, post);
     }
+
 
     @Test
-    public  void getReportTest() throws DbException {
-        when(reportEntityRepository.findById(1l)).thenReturn(Optional.ofNullable(getReportEntity()));
-        when(reportMapper.mapToReport(getReportEntity())).thenReturn(new ReportResource());
-        ReportResource  reportResource=adapter.getReport(1l);
+    public void getReportTest() throws DbException {
+        init(true);
+        initreports();
+        ReportResource reportResource = adapter.getReport(1l);
         assertNotNull(reportResource);
     }
+
     @Test(expected = DbException.class)
-    public  void getReportFailureTest() throws DbException {
-
-        when(reportMapper.mapToReport(getReportEntity())).thenReturn(new ReportResource());
-        ReportResource  reportResource=adapter.getReport(1l);
-
+    public void getReportFailureTest() throws DbException {
+        adapter.getReport(1l);
     }
 
     @Test
-    public  void addMarkTest() throws DbException, AuthenticationException {
+    public void addMarkTest() throws DbException, AuthenticationException {
 
-        User user=getUser();
-        user.setId(2l);
+        init(true);
+        initreports();
 
+        BanEntity banEntity = new BanEntity();
+        banEntityRepository.save(banEntity);
+        User user = new User();
+        user.setBanEntity(banEntity);
+        userRepository.save(user);
 
-        when(userRepository.findById(2l)).thenReturn(Optional.of(user));
-        when(reportEntityRepository.findById(1l)).thenReturn(Optional.ofNullable(getReportEntity()));
-        MarkResourcePost markResourcePost=new MarkResourcePost();
-        markResourcePost.setMark(5);
-        markResourcePost.setReportId(1l);
+        MarkResourcePost markResourcePost = new MarkResourcePost();
         markResourcePost.setUserId(2l);
+        markResourcePost.setReportId(1l);
+        markResourcePost.setMark(5);
+        Optional<ReportEntity> reportEntity = adapter.addMArk(markResourcePost);
 
-        adapter.addMArk(markResourcePost);
+        assertEquals(1, reportEntity.get().getReportRating().getUsersVoted().size());
 
-        ReportEntity reportEntity=getReportEntity();
-        reportEntity.getReportRating().getUsersVoted().get(0).setUserId(2l);
-        when(userVotedRepository.findByUserId(2l)).thenReturn(Optional.ofNullable(userVoted()));
-        when(reportEntityRepository.findById(1l)).thenReturn(Optional.ofNullable(reportEntity));
-        adapter.addMArk(markResourcePost);
+        assertEquals(5, reportEntity.get().getReportRating().getMarks());
+
+        assertThrows(DbException.class, () -> {
+            adapter.addMArk(markResourcePost);
+        });
+
+
     }
 
     @Test(expected = DbException.class)
     public void addMarkFailTest() throws DbException, AuthenticationException {
-        User user=getUser();
-        user.setId(1l);
-        when(userRepository.findById(1l)).thenReturn(Optional.of(user));
-        when(reportEntityRepository.findById(1l)).thenReturn(Optional.ofNullable(getReportEntity()));
-        MarkResourcePost markResourcePost=new MarkResourcePost();
-        markResourcePost.setMark(5);
-        markResourcePost.setReportId(1l);
-        markResourcePost.setUserId(1l);
+        init(true);
 
+
+        MarkResourcePost markResourcePost = new MarkResourcePost();
+        markResourcePost.setUserId(1l);
+        markResourcePost.setReportId(1l);
+        markResourcePost.setMark(5);
         adapter.addMArk(markResourcePost);
+
     }
 
     @Test(expected = DbException.class)
     public void notReportExist() throws DbException, AuthenticationException {
-        User user=getUser();
-        user.setId(1l);
-        when(userRepository.findById(1l)).thenReturn(Optional.of(user));
-        when(reportEntityRepository.findById(1l)).thenReturn(Optional.ofNullable(null));
-        MarkResourcePost markResourcePost=new MarkResourcePost();
-        markResourcePost.setMark(5);
+        init(true);
+        MarkResourcePost markResourcePost = new MarkResourcePost();
+        markResourcePost.setUserId(1l);
         markResourcePost.setReportId(1l);
-        markResourcePost.setUserId(2l);
-
+        markResourcePost.setMark(5);
         adapter.addMArk(markResourcePost);
     }
+
 
     @Test(expected = DbException.class)
-    public void secondMarkAndTest() throws DbException, AuthenticationException {
-        User user=getUser();
-        user.setId(2l);
-        ReportEntity reportEntity=getReportEntity();
-        reportEntity.getReportRating().getUsersVoted().get(0).setUserId(2l);
-        reportEntity.getReportRating().getUsersVoted().get(0).setMarked(true);
-        when(userRepository.findById(2l)).thenReturn(Optional.of(user));
-        when(reportEntityRepository.findById(1l)).thenReturn(Optional.ofNullable(reportEntity));
-        MarkResourcePost markResourcePost=new MarkResourcePost();
-        markResourcePost.setMark(5);
+    public void userNotExistTest() throws DbException, AuthenticationException {
+        init(true);
+        initreports();
+        MarkResourcePost markResourcePost = new MarkResourcePost();
+        markResourcePost.setMark(4);
         markResourcePost.setReportId(1l);
-        markResourcePost.setUserId(2l);
+        markResourcePost.setUserId(3l);
 
         adapter.addMArk(markResourcePost);
+    }
 
+
+    @Test
+    public void addMarkAndSetAsNotActive() throws AuthenticationException, ExceptionModel {
+        init(true);
+        initreports();
+
+        BanEntity banEntity = new BanEntity();
+        banEntityRepository.save(banEntity);
+        User user = new User();
+        user.setBanEntity(banEntity);
+        userRepository.save(user);
+
+        NotActiveResource notActiveResource = new NotActiveResource();
+        notActiveResource.setUserId(2l);
+        notActiveResource.setReportId(1l);
+
+        adapter.markAsNotActive(notActiveResource);
+
+        MarkResourcePost markResourcePost = new MarkResourcePost();
+        markResourcePost.setUserId(2l);
+        markResourcePost.setReportId(1l);
+        Optional<ReportEntity> r = adapter.addMArk(markResourcePost);
+
+        assertEquals(1, r.get().getReportRating().getNotActiveCounter());
+        assertEquals(1, r.get().getReportRating().getUsersVoted().size());
+        assertEquals(true, r.get().getReportRating().getUsersVoted().get(0).isMarked());
+        assertEquals(false, r.get().getReportRating().getUsersVoted().get(0).isFalse());
+        assertEquals(true, r.get().getReportRating().getUsersVoted().get(0).isNotActual());
+    }
+
+
+    @Test
+    public void addAsnotActiveAndAddMarkTest() throws AuthenticationException, ExceptionModel {
+        init(true);
+        initreports();
+
+        BanEntity banEntity = new BanEntity();
+        banEntityRepository.save(banEntity);
+        User user = new User();
+        user.setBanEntity(banEntity);
+        userRepository.save(user);
+
+
+        MarkResourcePost markResourcePost = new MarkResourcePost();
+        markResourcePost.setUserId(2l);
+        markResourcePost.setReportId(1l);
+        Optional<ReportEntity> r = adapter.addMArk(markResourcePost);
+
+        NotActiveResource notActiveResource = new NotActiveResource();
+        notActiveResource.setUserId(2l);
+        notActiveResource.setReportId(1l);
+
+        r = adapter.markAsNotActive(notActiveResource);
+
+        assertEquals(1, r.get().getReportRating().getNotActiveCounter());
+        assertEquals(1, r.get().getReportRating().getUsersVoted().size());
+        assertTrue(r.get().getReportRating().getUsersVoted().get(0).isMarked());
+        assertFalse(r.get().getReportRating().getUsersVoted().get(0).isFalse());
+        assertTrue(r.get().getReportRating().getUsersVoted().get(0).isNotActual());
+    }
+
+    @Test
+    public void markAsNotActiveTest() throws AuthenticationException, ExceptionModel {
+        init(true);
+        initreports();
+        BanEntity banEntity = new BanEntity();
+        banEntityRepository.save(banEntity);
+        User user = new User();
+        user.setBanEntity(banEntity);
+        userRepository.save(user);
+
+
+        NotActiveResource notActiveResource = new NotActiveResource();
+        notActiveResource.setUserId(2l);
+        notActiveResource.setReportId(1l);
+
+        Optional<ReportEntity> r = adapter.markAsNotActive(notActiveResource);
+
+
+        assertEquals(1, r.get().getReportRating().getUsersVoted().size());
+        assertTrue(r.get().getReportRating().getUsersVoted().get(0).isNotActual());
+        assertFalse(r.get().getReportRating().getUsersVoted().get(0).isMarked());
+
+        assertThrows(DbException.class, () -> {
+            adapter.markAsNotActive(notActiveResource);
+        });
+    }
+
+
+    @Test
+    public void markAsFalse() throws AuthenticationException, DbException {
+        init(true);
+        initreports();
+        BanEntity banEntity = new BanEntity();
+        banEntityRepository.save(banEntity);
+        User user = new User();
+        user.setBanEntity(banEntity);
+        userRepository.save(user);
+        NotActiveResource notActiveResource = new NotActiveResource();
+        notActiveResource.setUserId(2l);
+        notActiveResource.setReportId(1l);
+
+        Optional<ReportEntity> r = adapter.markAsFalse(notActiveResource);
+
+        assertEquals(1, r.get().getReportRating().getUsersVoted().size());
+        assertTrue(r.get().getReportRating().getUsersVoted().get(0).isFalse());
+        assertFalse(r.get().getReportRating().getUsersVoted().get(0).isMarked());
+
+
+        assertThrows(DbException.class, () -> adapter.markAsFalse(notActiveResource));
+    }
+
+
+    @Test
+    public void addAsFalseAndAddMarkTest() throws AuthenticationException, ExceptionModel {
+        init(true);
+        initreports();
+
+        BanEntity banEntity = new BanEntity();
+        banEntityRepository.save(banEntity);
+        User user = new User();
+        user.setBanEntity(banEntity);
+        userRepository.save(user);
+
+
+        MarkResourcePost markResourcePost = new MarkResourcePost();
+        markResourcePost.setUserId(2l);
+        markResourcePost.setReportId(1l);
+        adapter.addMArk(markResourcePost);
+
+        NotActiveResource notActiveResource = new NotActiveResource();
+        notActiveResource.setUserId(2l);
+        notActiveResource.setReportId(1l);
+
+        Optional<ReportEntity> r = adapter.markAsFalse(notActiveResource);
+
+        assertEquals(1, r.get().getReportRating().getFalseReportQuantity());
+        assertEquals(1, r.get().getReportRating().getUsersVoted().size());
+        assertTrue(r.get().getReportRating().getUsersVoted().get(0).isMarked());
+        assertFalse(r.get().getReportRating().getUsersVoted().get(0).isNotActual());
+        assertTrue(r.get().getReportRating().getUsersVoted().get(0).isFalse());
+    }
+
+
+    @Test
+    public void addAllTest() throws ExceptionModel, AuthenticationException {
+        init(true);
+        initreports();
+
+        BanEntity banEntity = new BanEntity();
+        banEntityRepository.save(banEntity);
+        User user = new User();
+        user.setBanEntity(banEntity);
+        userRepository.save(user);
+
+
+        MarkResourcePost markResourcePost = new MarkResourcePost();
+        markResourcePost.setUserId(2l);
+        markResourcePost.setReportId(1l);
+        adapter.addMArk(markResourcePost);
+
+        NotActiveResource notActiveResource = new NotActiveResource();
+        notActiveResource.setUserId(2l);
+        notActiveResource.setReportId(1l);
+
+        adapter.markAsFalse(notActiveResource);
+
+        Optional<ReportEntity> r = adapter.markAsNotActive(notActiveResource);
+
+        assertEquals(1, r.get().getReportRating().getFalseReportQuantity());
+        assertEquals(1, r.get().getReportRating().getUsersVoted().size());
+        assertTrue(r.get().getReportRating().getUsersVoted().get(0).isMarked());
+        assertTrue(r.get().getReportRating().getUsersVoted().get(0).isNotActual());
+        assertTrue(r.get().getReportRating().getUsersVoted().get(0).isFalse());
 
     }
+
 
     @Test(expected = DbException.class)
-    public  void  checkReportTest() throws DbException, AuthenticationException {
-        User user=getUser();
-        user.setId(2l);
-        ReportEntity reportEntity=getReportEntity();
-        reportEntity.getReportRating().getUsersVoted().get(0).setUserId(2l);
-        reportEntity.getReportRating().getUsersVoted().get(0).setMarked(true);
-        reportEntity.setUser(user);
-        when(userRepository.findById(2l)).thenReturn(Optional.of(user));
-        when(reportEntityRepository.findById(1l)).thenReturn(Optional.ofNullable(reportEntity));
-        MarkResourcePost markResourcePost=new MarkResourcePost();
-        markResourcePost.setMark(5);
-        markResourcePost.setReportId(1l);
-        markResourcePost.setUserId(2l);
+    public void checkReportSecondTest() throws DbException, AuthenticationException {
+        init(true);
+        initreports();
 
-        adapter.addMArk(markResourcePost);
+        NotActiveResource notActiveResource=new NotActiveResource();
+        notActiveResource.setReportId(1l);
+        notActiveResource.setUserId(3l);
+        adapter.markAsFalse(notActiveResource);
+
     }
 
-    @Test(expected = DbException.class)
-    public  void  checkReportSecondTest() throws DbException, AuthenticationException {
-        User user=getUser();
-        user.setId(2l);
-        when(userRepository.findById(2l)).thenReturn(Optional.of(user));
-        when(reportEntityRepository.findById(1l)).thenReturn(Optional.ofNullable(null));
-        MarkResourcePost markResourcePost=new MarkResourcePost();
-        markResourcePost.setMark(5);
-        markResourcePost.setReportId(1l);
-        markResourcePost.setUserId(2l);
+    @Test
+    public  void setFalseReportTest() throws AuthenticationException, DbException {
 
-        adapter.addMArk(markResourcePost);
+        init(true);
+        initreports();
+        ReportEntity reportEntity=reportEntityRepository.findById(1l).get();
+        reportEntity.getReportRating().setFalseReportQuantity(10);
+        reportRatingEntityRepository.save(reportEntity.getReportRating());
+
+        BanEntity banEntity = new BanEntity();
+        banEntityRepository.save(banEntity);
+        User user = new User();
+        user.setBanEntity(banEntity);
+        userRepository.save(user);
+
+        NotActiveResource notActiveResource=new NotActiveResource();
+        notActiveResource.setUserId(2l);
+        notActiveResource.setReportId(1l);
+
+        Optional<ReportEntity> report=adapter.markAsFalse(notActiveResource);
+
+        User responseUser=report.get().getUser();
+        assertTrue(responseUser.getBanEntity().isBanned());
+
+    }
+
+    @Test
+    public  void setNotActiveReportTest() throws AuthenticationException, ExceptionModel {
+
+        init(true);
+        initreports();
+        ReportEntity reportEntity=reportEntityRepository.findById(1l).get();
+        reportEntity.getReportRating().setNotActiveCounter(10);
+        reportRatingEntityRepository.save(reportEntity.getReportRating());
+
+        BanEntity banEntity = new BanEntity();
+        banEntityRepository.save(banEntity);
+        User user = new User();
+        user.setBanEntity(banEntity);
+        userRepository.save(user);
+
+        NotActiveResource notActiveResource=new NotActiveResource();
+        notActiveResource.setUserId(2l);
+        notActiveResource.setReportId(1l);
+
+        Optional<ReportEntity> report=adapter.markAsNotActive(notActiveResource);
+
+        assertEquals(11,report.get().getReportRating().getNotActiveCounter());
     }
 
 
+    @Test
+    public  void oneyearbanTest() throws AuthenticationException, DbException {
+        init(true);
+        initreports();
 
+        User userToBan=userRepository.findById(1l).get();
+        userToBan.getBanEntity().setBanCounter(3);
+        banEntityRepository.save(userToBan.getBanEntity());
+
+
+        ReportEntity reportEntity=reportEntityRepository.findById(1l).get();
+        reportEntity.getReportRating().setFalseReportQuantity(10);
+        reportRatingEntityRepository.save(reportEntity.getReportRating());
+
+        BanEntity banEntity = new BanEntity();
+        banEntityRepository.save(banEntity);
+        User user = new User();
+        user.setBanEntity(banEntity);
+        userRepository.save(user);
+
+        NotActiveResource notActiveResource=new NotActiveResource();
+        notActiveResource.setUserId(2l);
+        notActiveResource.setReportId(1l);
+
+        Optional<ReportEntity> report=adapter.markAsFalse(notActiveResource);
+
+        User responseUser=report.get().getUser();
+        assertTrue(responseUser.getBanEntity().isBanned());
+        assertEquals(4,responseUser.getBanEntity().getBanCounter());
+
+    }
+//
+//
+//    @Test
+//    public void markAsFalse() throws DbException, AuthenticationException {
+//
+//
+//    }
 
 }

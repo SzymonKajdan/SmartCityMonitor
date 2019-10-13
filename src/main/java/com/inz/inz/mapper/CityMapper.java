@@ -35,7 +35,7 @@ public abstract class CityMapper {
         if (cityEntity.getReportList() != null) {
             cityResource.setReports(cityEntity.getReportList().stream().map(reportMapper::mapToReportLigth).collect(Collectors.toList()));
         } else {
-            cityEntity.setReportList(new ArrayList<>());
+            cityResource.setReports(new ArrayList<>());
         }
     }
 }

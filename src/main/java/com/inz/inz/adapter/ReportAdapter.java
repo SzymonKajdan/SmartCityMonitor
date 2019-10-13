@@ -11,6 +11,7 @@ import com.inz.inz.resoruce.ReportResource;
 import com.inz.inz.resoruce.ReportResourcePost;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Optional;
 
 public interface ReportAdapter {
 
@@ -18,9 +19,9 @@ public interface ReportAdapter {
 
     ReportResource getReport(Long id) throws DbException;
 
-    void addMArk(MarkResourcePost markResourcePost) throws DbException, AuthenticationException;
+    Optional<ReportEntity> addMArk(MarkResourcePost markResourcePost) throws DbException, AuthenticationException;
 
-    void markAsNotActive(NotActiveResource notActiveResource) throws ExceptionModel, AuthenticationException;
+    Optional<ReportEntity> markAsNotActive(NotActiveResource notActiveResource) throws ExceptionModel, AuthenticationException;
 
-    void markAsFalse(NotActiveResource notActiveResource) throws AuthenticationException, DbException;
+    Optional<ReportEntity> markAsFalse(NotActiveResource notActiveResource) throws AuthenticationException, DbException;
 }

@@ -19,11 +19,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
 
+@Transactional
 @Service
 public class ReportAdapterImpl implements ReportAdapter {
 
@@ -52,9 +54,9 @@ public class ReportAdapterImpl implements ReportAdapter {
     public ReportEntity createReport(HttpServletRequest request, ReportResourcePost reportResourcePost) throws DbException, EnumExcpetion, AuthenticationException {
         Long id = getUserId(request);
         ReportEntity reportEntity = reportMapper.mapToEntity(reportResourcePost);
-        reportEntity.setUser(userRepository.getOne(id));
+        reportEntity.setUser(userRepository.findById(id).get());
 
-        checkBanned(userRepository.getOne(id));
+        checkBanned(userRepository.findById(id).get());
 
         try {
             save(reportEntity, id);
@@ -67,54 +69,8 @@ public class ReportAdapterImpl implements ReportAdapter {
         return reportEntity;
     }
 
-    private void checkBanned(User user) throws AuthenticationException {
-        if (user.getBanEntity().isBanned()) {
-            throw new AuthenticationException("You cann not add report to" + user.getBanEntity().getDate(), ErrorSpecifcation.OPERATIONNOTALLOWED.getCode());
-        }
-    }
-
     @Override
-    public ReportResource getReport(Long id) throws DbException {
-        Optional<ReportEntity> reportEntity = reportEntityRepository.findById(id);
-
-        if (reportEntity.isPresent()) {
-            return reportMapper.mapToReport(reportEntity.get());
-        } else {
-            throw new DbException(ErrorSpecifcation.RESURCENOTEXIST.getDetails() + " report", ErrorSpecifcation.RESURCENOTEXIST.getCode(), new Field(), HttpStatus.NOT_FOUND);
-        }
-    }
-
-    private ReportEntity save(ReportEntity reportEntity, long id) {
-
-        reportEntity.setReportRating(reportRatingEntityRepository.save(new ReportRatingEntity()));
-
-        CityEntity cityEntity = cityEntityRepository.findByName(reportEntity.getCity().getName()).get();
-        reportEntityRepository.save(reportEntity);
-        cityEntity.getReportList().add(reportEntity);
-        cityEntityRepository.save(cityEntity);
-        User u = userRepository.getOne(id);
-        u.getReportsList().add(reportEntity);
-        userRepository.save(u);
-        return reportEntity;
-    }
-
-    public void addMArk(MarkResourcePost markResourcePost) throws DbException, AuthenticationException {
-        Optional<User> user = userRepository.findById(markResourcePost.getUserId());
-        Optional<ReportEntity> reportEntity = reportEntityRepository.findById(markResourcePost.getReportId());
-
-        if (user.isPresent()) {
-            checkBanned(user.get());
-            checkReport(reportEntity, user.get().getId());
-            checkMarked(reportEntity, user.get().getId());
-            setMark(reportEntity.get(), user.get().getId(), markResourcePost);
-        } else {
-            userNotExist(markResourcePost.getUserId());
-        }
-
-    }
-
-    @Override
-    public void markAsFalse(NotActiveResource notActiveResource) throws AuthenticationException, DbException {
+    public Optional<ReportEntity> markAsFalse(NotActiveResource notActiveResource) throws AuthenticationException, DbException {
         Optional<User> user = userRepository.findById(notActiveResource.getUserId());
         Optional<ReportEntity> reportEntity = reportEntityRepository.findById(notActiveResource.getReportId());
 
@@ -127,11 +83,12 @@ public class ReportAdapterImpl implements ReportAdapter {
         } else {
             userNotExist(notActiveResource.getUserId());
         }
+        return reportEntity;
     }
 
 
     @Override
-    public void markAsNotActive(NotActiveResource notActiveResource) throws ExceptionModel, AuthenticationException {
+    public Optional<ReportEntity> markAsNotActive(NotActiveResource notActiveResource) throws ExceptionModel, AuthenticationException {
 
         Optional<User> user = userRepository.findById(notActiveResource.getUserId());
         Optional<ReportEntity> reportEntity = reportEntityRepository.findById(notActiveResource.getReportId());
@@ -141,20 +98,73 @@ public class ReportAdapterImpl implements ReportAdapter {
             checkReport(reportEntity, user.get().getId());
             checkIsMarkedAsNotActive(reportEntity.get(), user.get().getId());
             setNotActive(reportEntity.get(), user.get());
-            checkReportActivity(reportEntity.get());
+            if(reportEntity.get().getReportRating().getNotActiveCounter()>10) {
+                checkReportActivity(reportEntity.get());
+            }
 
         } else {
             userNotExist(notActiveResource.getUserId());
+        }
+        return reportEntity;
+    }
+
+
+
+    @Override
+    public ReportResource getReport(Long id) throws DbException {
+        Optional<ReportEntity> reportEntity = reportEntityRepository.findById(id);
+
+        if (reportEntity.isPresent()) {
+            return reportMapper.mapToReport(reportEntity.get());
+        } else {
+            throw new DbException(ErrorSpecifcation.RESURCENOTEXIST.getDetails() + " report", ErrorSpecifcation.RESURCENOTEXIST.getCode(), new Field(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @Transactional
+    protected ReportEntity save(ReportEntity reportEntity, long id) {
+
+        reportEntity.setReportRating(reportRatingEntityRepository.save(new ReportRatingEntity()));
+
+        CityEntity cityEntity = cityEntityRepository.findByName(reportEntity.getCity().getName()).get();
+        reportEntityRepository.save(reportEntity);
+        cityEntity.getReportList().add(reportEntity);
+        cityEntityRepository.save(cityEntity);
+        User u = userRepository.findById(id).get();
+        u.getReportsList().add(reportEntity);
+        userRepository.save(u);
+        return reportEntity;
+    }
+
+    public Optional<ReportEntity> addMArk(MarkResourcePost markResourcePost) throws DbException, AuthenticationException {
+        Optional<User> user = userRepository.findById(markResourcePost.getUserId());
+        Optional<ReportEntity> reportEntity = reportEntityRepository.findById(markResourcePost.getReportId());
+
+        if (user.isPresent()) {
+            checkBanned(user.get());
+            checkReport(reportEntity, user.get().getId());
+            checkMarked(reportEntity, user.get().getId());
+            setMark(reportEntity.get(), user.get().getId(), markResourcePost);
+        } else {
+            userNotExist(markResourcePost.getUserId());
+        }
+        return reportEntity;
+
+    }
+
+    private void checkBanned(User user) throws AuthenticationException {
+        if (user.getBanEntity().isBanned()) {
+            throw new AuthenticationException("You cann not add report to" + user.getBanEntity().getDate(), ErrorSpecifcation.OPERATIONNOTALLOWED.getCode());
         }
     }
 
 
     private void checkReportFalseActivity(ReportEntity reportEntity) {
-        if(reportEntity.getReportRating().getNotActiveCounter()>10){
-            User user=reportEntity.getUser();
-            ReportRatingEntity reportRatingEntity=reportEntity.getReportRating();
-            user.getUserRatingEntity().setMarks(user.getUserRatingEntity().getMarks()+reportRatingEntity.getMarks());
-            user.getUserRatingEntity().setQuantity(user.getUserRatingEntity().getQuantity()+reportRatingEntity.getQuantity());
+        if(reportEntity.getReportRating().getFalseReportQuantity()>10){
+
+         checkReportActivity(reportEntity);
+         User user=reportEntity.getUser();
+
             user.getBanEntity().setBanCounter(user.getBanEntity().getBanCounter()+1);
             if(user.getBanEntity().getBanCounter()<3){
                 DateTime dt = new DateTime()
@@ -184,18 +194,19 @@ public class ReportAdapterImpl implements ReportAdapter {
             userVoted.setFalse(true);
             userVotedRepository.save(userVoted);
             reportEntity.getReportRating().getUsersVoted().add(userVoted);
-            reportEntity.getReportRating().setNotActiveCounter(reportEntity.getReportRating().getFalseReportQuantity()+1);
+            reportEntity.getReportRating().setFalseReportQuantity(reportEntity.getReportRating().getFalseReportQuantity()+1);
             reportEntityRepository.save(reportEntity);
         } else {
             userVoted.setFalse(true);
             userVotedRepository.save(userVoted);
-            reportEntity.getReportRating().setNotActiveCounter(reportEntity.getReportRating().getFalseReportQuantity()+1);
+            reportEntity.getReportRating().setFalseReportQuantity(reportEntity.getReportRating().getFalseReportQuantity()+1);
             reportEntityRepository.save(reportEntity);
         }
     }
 
 
-    private void setNotActive(ReportEntity reportEntity, User user) {
+    @Transactional
+    protected void setNotActive(ReportEntity reportEntity, User user) {
         UserVoted userVoted = reportEntity.getReportRating().getUsersVoted().stream().filter(x -> x.getUserId().equals(user.getId())).findAny().orElse(null);
         if (userVoted == null) {
             userVoted = new UserVoted();
@@ -214,13 +225,13 @@ public class ReportAdapterImpl implements ReportAdapter {
     }
 
     private void checkReportActivity(ReportEntity reportEntity) {
-        if(reportEntity.getReportRating().getNotActiveCounter()>10){
+
             User user=reportEntity.getUser();
             ReportRatingEntity reportRatingEntity=reportEntity.getReportRating();
             user.getUserRatingEntity().setMarks(user.getUserRatingEntity().getMarks()+reportRatingEntity.getMarks());
             user.getUserRatingEntity().setQuantity(user.getUserRatingEntity().getQuantity()+reportRatingEntity.getQuantity());
             userRepository.save(user);
-        }
+
     }
 
     private void checkisMarkedAsFalse(ReportEntity reportEntity, Long userId) throws DbException {
@@ -272,9 +283,7 @@ public class ReportAdapterImpl implements ReportAdapter {
         } else {
             UserVoted userVoted = userVotedRepository.findByUserId(userId).get();
             userVoted.setMarked(true);
-            userVoted.setUserId(userId);
             userVotedRepository.save(userVoted);
-            reportEntity.getReportRating().getUsersVoted().add(userVoted);
             reportEntity.getReportRating().setQuantity(reportEntity.getReportRating().getQuantity() + 1);
             reportEntity.getReportRating().setMarks(reportEntity.getReportRating().getMarks() + markResourcePost.getMark());
             reportEntityRepository.save(reportEntity);

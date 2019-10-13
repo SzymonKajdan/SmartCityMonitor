@@ -33,7 +33,7 @@ public abstract class ReportMapper {
             @Mapping(target = "description", source = "res.description"),
             @Mapping(target = "photo", source = "res.photo"),
             @Mapping(target = "video", source = "res.video"),
-            @Mapping(target = "isActive", expression = "java( res.getReportRating().getNotActiveCounter()<10?true:false)")
+            @Mapping(target = "isActive", expression = "java( res.getReportRating().getNotActiveCounter()<10&& res.getReportRating().getFalseReportQuantity()<10?true:false)")
     })
     public abstract ReportLight mapToReportLigth(ReportEntity res);
 
@@ -48,7 +48,7 @@ public abstract class ReportMapper {
             @Mapping(target = "userId",expression = "java(res.getUser().getId())"),
             @Mapping(target = "reportRating",ignore = true),
             @Mapping(target = "mark", expression = "java( res.getReportRating().getQuantity()!=0?res.getReportRating().getMarks()/res.getReportRating().getQuantity():0.0)"),
-            @Mapping(target = "isActive", expression = "java( res.getReportRating().getNotActiveCounter()<10?true:false)")
+            @Mapping(target = "isActive", expression = "java( res.getReportRating().getNotActiveCounter()<10&& res.getReportRating().getFalseReportQuantity()<10?true:false)")
     })
     public abstract ReportResource mapToReport(ReportEntity res);
 
