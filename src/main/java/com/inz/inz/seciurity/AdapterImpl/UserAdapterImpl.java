@@ -1,15 +1,16 @@
 package com.inz.inz.seciurity.AdapterImpl;
 
-import com.inz.inz.exceptionhandler.DbException;
-import com.inz.inz.exceptionhandler.ErrorSpecifcation;
 import com.inz.inz.entity.BanEntity;
 import com.inz.inz.entity.UserRatingEntity;
+import com.inz.inz.exceptionhandler.DbException;
+import com.inz.inz.exceptionhandler.ErrorSpecifcation;
 import com.inz.inz.mapper.UserMapper;
 import com.inz.inz.repository.AuthorityRepository;
 import com.inz.inz.repository.BanEntityRepository;
 import com.inz.inz.repository.UserRatingRepository;
 import com.inz.inz.repository.UserRepository;
 import com.inz.inz.seciurity.Resource.UserAuthResoruce;
+import com.inz.inz.seciurity.Resource.UserRank;
 import com.inz.inz.seciurity.Resource.UserResourcePost;
 import com.inz.inz.seciurity.adapter.UserAdapter;
 import com.inz.inz.seciurity.model.User;
@@ -19,6 +20,9 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserAdapterImpl implements UserAdapter {
@@ -67,6 +71,19 @@ public class UserAdapterImpl implements UserAdapter {
 
 
         return userAuthResoruce;
+    }
+
+    @Override
+    public List<UserRank> getRank() {
+        List<User> userRanks=userRepository.findAll();
+
+        userRanks=userRanks.stream().limit(100).filter(x->x.getUserRatingEntity().getQuantity()>=100).collect(Collectors.toList());
+
+      List<UserRank>userRankList=userRanks.stream().map(userMapper::mapToUserRank).collect(Collectors.toList());
+
+
+     return userRankList.stream().sorted(Comparator.comparingDouble(UserRank::getAvgMark)).collect(Collectors.toList());
+
     }
 
     private void createRealtions(User user) throws DbException {

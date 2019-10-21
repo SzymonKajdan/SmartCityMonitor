@@ -19,7 +19,7 @@ public class UserAuthResoruce {
 
     private Boolean isBanned;
 
-    private Integer userRating;
+    private Double userRating;
 
     private List<ReportLight> reports;
 }

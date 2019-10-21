@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Transactional
 @Service
@@ -86,6 +87,19 @@ public class ReportAdapterImpl implements ReportAdapter {
         return reportEntity;
     }
 
+    @Override
+    public List<ReportResource> getReports(Long id) throws DbException {
+        List<ReportResource> resources = null;
+        if (userRepository.findById(id).isPresent()) {
+            List<ReportEntity> reportEntities=reportEntityRepository.findAllByUserId(id);
+            
+            resources= reportEntities.stream().map(reportMapper::mapToReport).collect(Collectors.toList());
+            
+        } else {
+            userNotExist(id);
+        }
+        return resources;
+    }
 
     @Override
     public Optional<ReportEntity> markAsNotActive(NotActiveResource notActiveResource) throws ExceptionModel, AuthenticationException {

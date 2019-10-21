@@ -1,4 +1,10 @@
 
+## [0.0.6]
+- add test's 
+- add two endpotins to get rank and user reports 
+- add new dao to get rank 
+
+
 ## [0.0.5]
 ## changes 
 - clean code 

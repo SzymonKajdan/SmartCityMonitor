@@ -1,10 +1,10 @@
 package com.inz.inz.controller;
 
+import com.inz.inz.adapter.adapterImpl.ReportAdapterImpl;
 import com.inz.inz.exceptionhandler.AuthenticationException;
 import com.inz.inz.exceptionhandler.DbException;
 import com.inz.inz.exceptionhandler.EnumExcpetion;
 import com.inz.inz.exceptionhandler.ExceptionModel;
-import com.inz.inz.adapter.adapterImpl.ReportAdapterImpl;
 import com.inz.inz.resoruce.MarkResourcePost;
 import com.inz.inz.resoruce.NotActiveResource;
 import com.inz.inz.resoruce.ReportResource;
@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("reports")
@@ -53,5 +54,12 @@ public class ReportController {
     public ResponseEntity<?> markAsFalse(@RequestBody @Valid NotActiveResource notActiveResource) throws AuthenticationException, ExceptionModel {
         reportAdapter.markAsFalse(notActiveResource);
         return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @GetMapping
+    @RequestMapping(value = "getUserReports/{id}",produces = MEDIA_TYPE)
+    public ResponseEntity<List<ReportResource>> getReports(@PathVariable Long id) throws DbException {
+
+        return new ResponseEntity<>(reportAdapter.getReports(id), HttpStatus.OK);
     }
 }

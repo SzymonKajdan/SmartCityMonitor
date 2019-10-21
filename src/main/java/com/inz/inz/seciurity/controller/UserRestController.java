@@ -2,6 +2,7 @@ package com.inz.inz.seciurity.controller;
 
 import com.inz.inz.exceptionhandler.DbException;
 import com.inz.inz.seciurity.AdapterImpl.UserAdapterImpl;
+import com.inz.inz.seciurity.Resource.UserRank;
 import com.inz.inz.seciurity.Resource.UserResourcePost;
 import com.inz.inz.seciurity.jwt.JwtUser;
 import com.inz.inz.seciurity.service.UserTokenReciver;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 public class UserRestController {
@@ -37,5 +39,13 @@ public class UserRestController {
         userAdapter.createUser(userResourcePost);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
+
+    @GetMapping
+    @RequestMapping("getRank")
+    public  ResponseEntity<List<UserRank>> getRank(){
+        return  new ResponseEntity<>(userAdapter.getRank(),HttpStatus.OK);
+
+    }
+
 
 }

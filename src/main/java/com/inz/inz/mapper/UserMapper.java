@@ -2,6 +2,7 @@ package com.inz.inz.mapper;
 
 import com.inz.inz.repository.AuthorityRepository;
 import com.inz.inz.seciurity.Resource.UserAuthResoruce;
+import com.inz.inz.seciurity.Resource.UserRank;
 import com.inz.inz.seciurity.Resource.UserResourcePost;
 import com.inz.inz.seciurity.model.Authority;
 import com.inz.inz.seciurity.model.AuthorityName;
@@ -37,9 +38,24 @@ public abstract class UserMapper {
             @Mapping(target = "firstname", source = "user.firstname"),
             @Mapping(target = "email", source = "user.email"),
             @Mapping(target = "reports", ignore = true),
-           @Mapping(target = "id",source = "user.id")
+            @Mapping(target = "id", source = "user.id")
     })
     public abstract UserAuthResoruce mapToUserAuthResource(User user);
+
+
+    @Mappings({
+            @Mapping(target = "username", source = "user.username"),
+            @Mapping(target = "quantity", source = "user.userRatingEntity.quantity")
+    })
+    public abstract UserRank mapToUserRank(User user);
+
+
+    @AfterMapping
+    protected void fillMark(User user, @MappingTarget UserRank userRank) {
+        userRank.setAvgMark(user.getUserRatingEntity().getQuantity() != 0
+                ?Math.round( (double)user.getUserRatingEntity().getMarks() / (double) user.getUserRatingEntity().getQuantity()) : 0.0);
+
+    }
 
     @AfterMapping
     protected void fillUserRating(User user, @MappingTarget UserAuthResoruce userAuthResoruce) {
@@ -48,8 +64,8 @@ public abstract class UserMapper {
             userAuthResoruce.setIsBanned(user.getBanEntity().isBanned());
         }
         if (user.getUserRatingEntity() != null) {
-            Integer rating = user.getUserRatingEntity().getQuantity() != 0
-                    ? user.getUserRatingEntity().getMarks() / user.getUserRatingEntity().getQuantity() : 0;
+            double rating = user.getUserRatingEntity().getQuantity() != 0
+                    ? (double)user.getUserRatingEntity().getMarks() / (double) user.getUserRatingEntity().getQuantity() : 0.0;
             userAuthResoruce.setUserRating(rating);
         }
     }
