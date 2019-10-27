@@ -27,6 +27,8 @@ import static org.mockito.Mockito.when;
 @RunWith(SpringRunner.class)
 public class UserAdapterMockTest {
 
+
+
     @MockBean
     UserRepository userRepository;
 

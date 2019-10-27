@@ -92,7 +92,7 @@ public abstract class UserMapper {
     @AfterMapping
     protected void fillUser(UserResourcePost post, @MappingTarget User user) {
 
-        Authority userRole = authorityRepository.findByName(AuthorityName.ROLE_WORKER);
+        Authority userRole = authorityRepository.findByName(AuthorityName.ROLE_USER);
         user.setAuthorities(Collections.singletonList(userRole));
         user.setPassword(passwordEncoder().encode(post.getPassword()));
         user.setLastPasswordResetDate(new Date());

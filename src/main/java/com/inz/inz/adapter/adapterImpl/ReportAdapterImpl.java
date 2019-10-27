@@ -78,7 +78,7 @@ public class ReportAdapterImpl implements ReportAdapter {
         if (user.isPresent()) {
             checkBanned(user.get());
             checkReport(reportEntity, user.get().getId());
-            checkisMarkedAsFalse(reportEntity.get(), user.get().getId());
+            checkIsMarkedAsFalse(reportEntity.get(), user.get().getId());
             setFalseReport(reportEntity.get(), user.get());
             checkReportFalseActivity(reportEntity.get());
         } else {
@@ -248,7 +248,7 @@ public class ReportAdapterImpl implements ReportAdapter {
 
     }
 
-    private void checkisMarkedAsFalse(ReportEntity reportEntity, Long userId) throws DbException {
+    private void checkIsMarkedAsFalse(ReportEntity reportEntity, Long userId) throws DbException {
         UserVoted userVoted = reportEntity.getReportRating()
                 .getUsersVoted()
                 .stream()

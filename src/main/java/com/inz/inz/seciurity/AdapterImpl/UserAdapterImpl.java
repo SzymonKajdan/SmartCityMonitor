@@ -14,6 +14,7 @@ import com.inz.inz.seciurity.Resource.UserRank;
 import com.inz.inz.seciurity.Resource.UserResourcePost;
 import com.inz.inz.seciurity.adapter.UserAdapter;
 import com.inz.inz.seciurity.model.User;
+import com.inz.inz.seciurity.service.EmailService;
 import com.inz.inz.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -45,12 +46,15 @@ public class UserAdapterImpl implements UserAdapter {
     @Autowired
     UserMapper userMapper;
 
+    @Autowired
+    EmailService emailService;
+
 
     @Override
     public User createUser(UserResourcePost userResourcePost) throws DbException {
         User user;
         try {
-            user=userMapper.mapUserResourcePostToUser(userResourcePost);
+            user = userMapper.mapUserResourcePostToUser(userResourcePost);
             createRealtions(user);
             user = userRepository.save(user);
         } catch (DataIntegrityViolationException ex) {
@@ -65,9 +69,9 @@ public class UserAdapterImpl implements UserAdapter {
 
     @Override
     public UserAuthResoruce mapUserAuthResource(User user) {
-        UserAuthResoruce userAuthResoruce ;
+        UserAuthResoruce userAuthResoruce;
 
-        userAuthResoruce=userMapper.mapToUserAuthResource(user);
+        userAuthResoruce = userMapper.mapToUserAuthResource(user);
 
 
         return userAuthResoruce;
@@ -75,15 +79,20 @@ public class UserAdapterImpl implements UserAdapter {
 
     @Override
     public List<UserRank> getRank() {
-        List<User> userRanks=userRepository.findAll();
+        List<User> userRanks = userRepository.findAll();
 
-        userRanks=userRanks.stream().limit(100).filter(x->x.getUserRatingEntity().getQuantity()>=100).collect(Collectors.toList());
+        userRanks = userRanks.stream().limit(100).filter(x -> x.getUserRatingEntity().getQuantity() >= 100).collect(Collectors.toList());
 
-      List<UserRank>userRankList=userRanks.stream().map(userMapper::mapToUserRank).collect(Collectors.toList());
+        List<UserRank> userRankList = userRanks.stream().map(userMapper::mapToUserRank).collect(Collectors.toList());
 
 
-     return userRankList.stream().sorted(Comparator.comparingDouble(UserRank::getAvgMark)).collect(Collectors.toList());
+        return userRankList.stream().sorted(Comparator.comparingDouble(UserRank::getAvgMark)).collect(Collectors.toList());
 
+    }
+
+    @Override
+    public void sendNewPassword(String email) throws DbException {
+        emailService.resetPassword(email);
     }
 
     private void createRealtions(User user) throws DbException {
@@ -99,7 +108,7 @@ public class UserAdapterImpl implements UserAdapter {
         } catch (DataIntegrityViolationException ex) {
 
             DbException dbException = new DbException();
-            dbException.setCaused(ErrorSpecifcation.CREATINGERROR.getDetails()+"User");
+            dbException.setCaused(ErrorSpecifcation.CREATINGERROR.getDetails() + "User");
             dbException.setCode(ErrorSpecifcation.CREATINGERROR.getCode());
             throw dbException;
         }

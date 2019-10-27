@@ -5,8 +5,10 @@ public enum ErrorSpecifcation {
     USEREXIST("User alredy exist","0002"),
     CREATINGERROR("Error at Saving ","0003"),
     RESURCENOTEXIST("Resource exist","0004"),
-    OPERATIONNOTALLOWED("Operation not allowed","0006");
-
+    OPERATIONNOTALLOWED("Operation not allowed","0006"),
+    SENDINGEMAIL("Error at sending emial try again later","0007"),
+    USERNOTEXIST("User with this email not exist","0008"),
+    NOTFOUND("Resorcue not found ","0009");
 
     private String details;
     private String code;

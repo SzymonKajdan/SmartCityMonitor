@@ -1,5 +1,5 @@
 package com.inz.inz.seciurity.model;
 
 public enum AuthorityName {
-    ROLE_MANAGER, ROLE_WORKER
+    ROLE_ADMIN, ROLE_USER
 }

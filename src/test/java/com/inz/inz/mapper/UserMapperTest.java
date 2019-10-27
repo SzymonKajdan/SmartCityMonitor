@@ -5,8 +5,10 @@ import com.inz.inz.entity.enums.ReportType;
 import com.inz.inz.seciurity.Resource.UserAuthResoruce;
 import com.inz.inz.seciurity.Resource.UserResourcePost;
 import com.inz.inz.seciurity.model.User;
+import com.inz.inz.seciurity.service.EmailServiceImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -25,6 +27,9 @@ public class UserMapperTest {
     ReportMapper reportMapper = new ReportMapperImpl();
     @Autowired
     UserMapper userMapper = new UserMapperImpl();
+
+    @InjectMocks
+    EmailServiceImpl emailService;
 
 
     @Test

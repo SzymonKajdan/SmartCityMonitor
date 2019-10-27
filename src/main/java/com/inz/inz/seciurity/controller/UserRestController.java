@@ -19,7 +19,6 @@ import java.util.List;
 public class UserRestController {
 
 
-
     @Autowired
     UserAdapterImpl userAdapter;
 
@@ -28,7 +27,7 @@ public class UserRestController {
 
     @GetMapping
     @RequestMapping(value = "user")
-    public  JwtUser getAuthenticatedUser(HttpServletRequest request) {
+    public JwtUser getAuthenticatedUser(HttpServletRequest request) {
         JwtUser user = userTokenRecvier.getAuthenticatedUser(request);
         return user;
     }
@@ -42,8 +41,15 @@ public class UserRestController {
 
     @GetMapping
     @RequestMapping("getRank")
-    public  ResponseEntity<List<UserRank>> getRank(){
-        return  new ResponseEntity<>(userAdapter.getRank(),HttpStatus.OK);
+    public ResponseEntity<List<UserRank>> getRank() {
+        return new ResponseEntity<>(userAdapter.getRank(), HttpStatus.OK);
+    }
+
+    @PostMapping
+    @RequestMapping(value = "resetPassword/{emailAdddres}")
+    public ResponseEntity<?> resetPassword(@PathVariable(required = true) String emailAdddres) throws DbException {
+        userAdapter.sendNewPassword(emailAdddres);
+        return new ResponseEntity<>(HttpStatus.CREATED);
 
     }
 

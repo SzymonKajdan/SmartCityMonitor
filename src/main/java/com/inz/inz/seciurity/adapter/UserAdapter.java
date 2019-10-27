@@ -9,9 +9,11 @@ import com.inz.inz.seciurity.model.User;
 import java.util.List;
 
 public interface UserAdapter {
-     User  createUser(UserResourcePost user) throws DbException;
+    User createUser(UserResourcePost user) throws DbException;
 
-     UserAuthResoruce mapUserAuthResource(User user);
+    UserAuthResoruce mapUserAuthResource(User user);
 
     List<UserRank> getRank();
+
+    void sendNewPassword(String email) throws DbException;
 }

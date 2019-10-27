@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingPathVariableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 
 import java.util.ArrayList;
@@ -32,7 +33,7 @@ public class ExceptionHandler {
     @org.springframework.web.bind.annotation.ExceptionHandler({DbException.class})
     public  ResponseEntity<ServerModelException> getPSQLException(DbException ex){
         ServerModelException serverModelException= genrateException(ex.getCode(), ex.getCaused(), ex.getField());
-        logger.error("Failrue at saving to db return code  "+serverModelException.getCode()+" with Http status"+HttpStatus.UNPROCESSABLE_ENTITY);
+        logger.error("Failrue  "+serverModelException.getCode()+" with Http status"+HttpStatus.UNPROCESSABLE_ENTITY);
         HttpStatus httpStatus=ex.getHttpStatus()!=null?ex.getHttpStatus():HttpStatus.UNPROCESSABLE_ENTITY;
         return  new ResponseEntity<>(serverModelException,httpStatus);
     }
@@ -78,6 +79,17 @@ public class ExceptionHandler {
         serverModelException.setDetails("Cast fail for "+ex.getMessage());
         serverModelException.setCode("C2");
         return  new ResponseEntity<>(serverModelException,HttpStatus.BAD_REQUEST);
+    }
+
+    @org.springframework.web.bind.annotation.ExceptionHandler({MissingPathVariableException.class})
+    public ResponseEntity<ServerModelException> pathParamsExceiption(MissingPathVariableException ex){
+
+        ServerModelException serverModelException=new ServerModelException();
+        serverModelException.setCode("VE");
+        serverModelException.setDetails("Valdiation Exception Missing "+ex.getVariableName()+" in path.");
+        serverModelException.setFields(new ArrayList<>());
+
+        return new ResponseEntity<>(serverModelException,HttpStatus.UNPROCESSABLE_ENTITY);
     }
     private ServerModelException  genrateException(String code, String caused, Field field) {
         ServerModelException serverModelException=new ServerModelException();

@@ -1,7 +1,11 @@
 
+## [0.0.7]
+- add endpoint to reset password 
+- add service to sending mails 
+
 ## [0.0.6]
 - add test's 
-- add two endpotins to get rank and user reports 
+- add two endpotins to get rank and userK reports 
 - add new dao to get rank 
 
 

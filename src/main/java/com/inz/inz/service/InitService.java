@@ -46,18 +46,18 @@ public class InitService implements ApplicationListener<ContextRefreshedEvent> {
 
 
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
-        if (authorityRepository.findByName(AuthorityName.ROLE_MANAGER) == null) {
+        if (authorityRepository.findByName(AuthorityName.ROLE_ADMIN) == null) {
             Authority adminRole = new Authority();
-            adminRole.setName(AuthorityName.ROLE_MANAGER);
+            adminRole.setName(AuthorityName.ROLE_ADMIN);
 
             Authority userRole = new Authority();
-            userRole.setName(AuthorityName.ROLE_WORKER);
+            userRole.setName(AuthorityName.ROLE_USER);
 
             authorityRepository.save(adminRole);
             authorityRepository.save(userRole);
 
-            adminRole = authorityRepository.findByName(AuthorityName.ROLE_MANAGER);//.orElseThrow(() -> new RuntimeException("Fail! -> Cause: User Role not find."));
-            userRole = authorityRepository.findByName(AuthorityName.ROLE_WORKER);//.orElseThrow(() -> new RuntimeException("Fail! -> Cause: User Role not find."));
+            adminRole = authorityRepository.findByName(AuthorityName.ROLE_ADMIN);//.orElseThrow(() -> new RuntimeException("Fail! -> Cause: User Role not find."));
+            userRole = authorityRepository.findByName(AuthorityName.ROLE_USER);//.orElseThrow(() -> new RuntimeException("Fail! -> Cause: User Role not find."));
 
             User admin = new User();
             admin.setEmail("admin@email.pl");
@@ -120,7 +120,7 @@ public class InitService implements ApplicationListener<ContextRefreshedEvent> {
             ReportRatingEntity reportRatingEntity = new ReportRatingEntity();
             reportRatingEntity.setMarks(5);
             reportRatingEntity.setQuantity(1);
-            reportRatingEntity.setFalseReportQuantity(10);
+            reportRatingEntity.setFalseReportQuantity(9);
             reportRatingEntity.setUsersVoted(Collections.singletonList(userVoted));
             reportRatingEntityRepository.save(reportRatingEntity);
 
