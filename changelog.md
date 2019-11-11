@@ -1,4 +1,9 @@
 
+## [0.0.8]
+- changing packages names 
+- add unaouthorized  execption handling  
+- add serialization check 
+
 ## [0.0.7]
 - add endpoint to reset password 
 - add service to sending mails 

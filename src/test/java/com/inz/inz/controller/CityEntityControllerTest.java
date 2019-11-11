@@ -2,8 +2,8 @@ package com.inz.inz.controller;
 
 import com.inz.inz.adapter.adapterImpl.CityAdapterImpl;
 import com.inz.inz.exceptionhandler.DbException;
-import com.inz.inz.resoruce.CityResource;
-import com.inz.inz.resoruce.CityResourceGetLight;
+import com.inz.inz.resoruce.cityResource.CityResource;
+import com.inz.inz.resoruce.cityResource.CityResourceGetLight;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

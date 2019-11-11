@@ -2,7 +2,7 @@ package com.inz.inz.scheduler;
 
 import com.inz.inz.repository.BanEntityRepository;
 import com.inz.inz.repository.UserRepository;
-import com.inz.inz.seciurity.model.User;
+import com.inz.inz.security.model.User;
 import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

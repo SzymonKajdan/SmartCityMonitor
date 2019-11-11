@@ -5,10 +5,10 @@ import com.inz.inz.exceptionhandler.DbException;
 import com.inz.inz.exceptionhandler.EnumExcpetion;
 import com.inz.inz.exceptionhandler.ExceptionModel;
 import com.inz.inz.entity.ReportEntity;
-import com.inz.inz.resoruce.MarkResourcePost;
-import com.inz.inz.resoruce.NotActiveResource;
-import com.inz.inz.resoruce.ReportResource;
-import com.inz.inz.resoruce.ReportResourcePost;
+import com.inz.inz.resoruce.reportResource.MarkResourcePost;
+import com.inz.inz.resoruce.reportResource.NotActiveResource;
+import com.inz.inz.resoruce.reportResource.ReportResource;
+import com.inz.inz.resoruce.reportResource.ReportResourcePost;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;

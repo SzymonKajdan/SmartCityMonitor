@@ -8,9 +8,9 @@ import com.inz.inz.entity.CityEntity;
 import com.inz.inz.entity.ReportEntity;
 import com.inz.inz.entity.enums.ReportType;
 import com.inz.inz.repository.CityEntityRepository;
-import com.inz.inz.resoruce.ReportLight;
-import com.inz.inz.resoruce.ReportResource;
-import com.inz.inz.resoruce.ReportResourcePost;
+import com.inz.inz.resoruce.reportResource.ReportLight;
+import com.inz.inz.resoruce.reportResource.ReportResource;
+import com.inz.inz.resoruce.reportResource.ReportResourcePost;
 import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
 

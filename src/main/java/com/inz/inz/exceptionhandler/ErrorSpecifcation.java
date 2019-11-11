@@ -8,7 +8,8 @@ public enum ErrorSpecifcation {
     OPERATIONNOTALLOWED("Operation not allowed","0006"),
     SENDINGEMAIL("Error at sending emial try again later","0007"),
     USERNOTEXIST("User with this email not exist","0008"),
-    NOTFOUND("Resorcue not found ","0009");
+    NOTFOUND("Resorcue not found ","0009"),
+    UNAUTHORIZED("unauthorized","0010");
 
     private String details;
     private String code;

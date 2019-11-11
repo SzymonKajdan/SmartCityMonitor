@@ -1,8 +1,6 @@
 package com.inz.inz.exceptionhandler;
 
 import lombok.extern.log4j.Log4j2;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -17,7 +15,7 @@ import java.util.Collections;
 @Log4j2
 public class ExceptionHandler {
 
-    Logger logger = LogManager.getLogger(ExceptionHandler.class);
+
 
     @org.springframework.web.bind.annotation.ExceptionHandler({HttpRequestMethodNotSupportedException.class})
     public ResponseEntity<ServerModelException> getUnsapportedMethodException(HttpRequestMethodNotSupportedException ex){
@@ -25,7 +23,7 @@ public class ExceptionHandler {
         serverModelException.setCode(ErrorSpecifcation.NOTSUPPORTEDMETHOD.getCode());
         serverModelException.setDetails(ErrorSpecifcation.NOTSUPPORTEDMETHOD.getDetails());
 
-        logger.error("Unsupported method call return code "+serverModelException.getCode()+" with Http status"+HttpStatus.METHOD_NOT_ALLOWED);
+        log.error("Unsupported method call return code "+serverModelException.getCode()+" with Http status"+HttpStatus.METHOD_NOT_ALLOWED);
 
         return  new ResponseEntity<>(serverModelException, HttpStatus.METHOD_NOT_ALLOWED);
     }
@@ -33,7 +31,7 @@ public class ExceptionHandler {
     @org.springframework.web.bind.annotation.ExceptionHandler({DbException.class})
     public  ResponseEntity<ServerModelException> getPSQLException(DbException ex){
         ServerModelException serverModelException= genrateException(ex.getCode(), ex.getCaused(), ex.getField());
-        logger.error("Failrue  "+serverModelException.getCode()+" with Http status"+HttpStatus.UNPROCESSABLE_ENTITY);
+        log.error("Failrue  "+serverModelException.getCode()+" with Http status"+HttpStatus.UNPROCESSABLE_ENTITY);
         HttpStatus httpStatus=ex.getHttpStatus()!=null?ex.getHttpStatus():HttpStatus.UNPROCESSABLE_ENTITY;
         return  new ResponseEntity<>(serverModelException,httpStatus);
     }
@@ -50,7 +48,7 @@ public class ExceptionHandler {
             f.setField(x.getField());
             serverModelException.getFields().add(f);
         });
-        logger.error("ValidationFailrue "+serverModelException.getCode()+" with Http status"+HttpStatus.UNPROCESSABLE_ENTITY);
+        log.error("ValidationFailrue "+serverModelException.getCode()+" with Http status"+HttpStatus.UNPROCESSABLE_ENTITY);
 
         return  new ResponseEntity<>(serverModelException,HttpStatus.UNPROCESSABLE_ENTITY);
     }
@@ -61,14 +59,15 @@ public class ExceptionHandler {
         serverModelException.setCode(ex.getCode());
         serverModelException.setDetails(ex.getDetails());
 
-        logger.error("ValidationFailRue "+serverModelException.getCode()+" with Http status"+HttpStatus.UNAUTHORIZED);
+        log.error("ValidationFailRue "+serverModelException.getCode()+" with Http status"+HttpStatus.UNAUTHORIZED);
         return  new ResponseEntity<>(serverModelException,HttpStatus.UNAUTHORIZED);
     }
+
     @org.springframework.web.bind.annotation.ExceptionHandler({EnumExcpetion.class})
     public  ResponseEntity<ServerModelException> authException(EnumExcpetion ex){
 
         ServerModelException serverModelException= genrateException(ex.getCode(), ex.getCaused(), ex.getField());
-        logger.error("EnumExcetpion "+serverModelException.getCode()+" with Http status"+HttpStatus.UNPROCESSABLE_ENTITY);
+        log.error("EnumExcetpion "+serverModelException.getCode()+" with Http status"+HttpStatus.UNPROCESSABLE_ENTITY);
         return  new ResponseEntity<>(serverModelException,HttpStatus.UNAUTHORIZED);
     }
 

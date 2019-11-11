@@ -2,9 +2,9 @@ package com.inz.inz.service;
 
 import com.inz.inz.entity.*;
 import com.inz.inz.repository.*;
-import com.inz.inz.seciurity.model.Authority;
-import com.inz.inz.seciurity.model.AuthorityName;
-import com.inz.inz.seciurity.model.User;
+import com.inz.inz.security.model.Authority;
+import com.inz.inz.security.model.AuthorityName;
+import com.inz.inz.security.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -150,7 +150,6 @@ public class InitService implements ApplicationListener<ContextRefreshedEvent> {
             //.save(cityEntity);
             // userRepository.save(user);
             ReportRatingEntity reportRatingEntity1=new ReportRatingEntity();
-
 
         }
     }

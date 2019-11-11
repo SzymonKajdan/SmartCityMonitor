@@ -1,8 +1,8 @@
 package com.inz.inz.config;
 
-import com.inz.inz.seciurity.jwt.JwtAuthenticationEntryPoint;
-import com.inz.inz.seciurity.jwt.JwtAuthorizationTokenFilter;
-import com.inz.inz.seciurity.service.JwtUserDetailsService;
+import com.inz.inz.security.jwt.JwtAuthenticationEntryPoint;
+import com.inz.inz.security.jwt.JwtAuthorizationTokenFilter;
+import com.inz.inz.security.service.JwtUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

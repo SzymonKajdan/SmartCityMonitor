@@ -1,12 +1,12 @@
 package com.inz.inz.controller;
 
 import com.inz.inz.exceptionhandler.DbException;
-import com.inz.inz.seciurity.AdapterImpl.UserAdapterImpl;
-import com.inz.inz.seciurity.Resource.UserResourcePost;
-import com.inz.inz.seciurity.controller.UserRestController;
-import com.inz.inz.seciurity.jwt.JwtUser;
-import com.inz.inz.seciurity.model.User;
-import com.inz.inz.seciurity.service.UserTokenReciver;
+import com.inz.inz.security.AdapterImpl.UserAdapterImpl;
+import com.inz.inz.security.Resource.UserResourcePost;
+import com.inz.inz.security.controller.UserRestController;
+import com.inz.inz.security.jwt.JwtUser;
+import com.inz.inz.security.model.User;
+import com.inz.inz.security.service.UserTokenReciver;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

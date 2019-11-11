@@ -2,7 +2,7 @@ package com.inz.inz.entity;
 
 
 import com.inz.inz.entity.enums.ReportType;
-import com.inz.inz.seciurity.model.User;
+import com.inz.inz.security.model.User;
 import lombok.Data;
 
 import javax.persistence.*;

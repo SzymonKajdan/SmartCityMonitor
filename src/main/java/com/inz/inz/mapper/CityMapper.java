@@ -1,8 +1,8 @@
 package com.inz.inz.mapper;
 
 import com.inz.inz.entity.CityEntity;
-import com.inz.inz.resoruce.CityResource;
-import com.inz.inz.resoruce.CityResourceGetLight;
+import com.inz.inz.resoruce.cityResource.CityResource;
+import com.inz.inz.resoruce.cityResource.CityResourceGetLight;
 import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
 

@@ -1,12 +1,12 @@
 package com.inz.inz.mapper;
 
 import com.inz.inz.repository.AuthorityRepository;
-import com.inz.inz.seciurity.Resource.UserAuthResoruce;
-import com.inz.inz.seciurity.Resource.UserRank;
-import com.inz.inz.seciurity.Resource.UserResourcePost;
-import com.inz.inz.seciurity.model.Authority;
-import com.inz.inz.seciurity.model.AuthorityName;
-import com.inz.inz.seciurity.model.User;
+import com.inz.inz.security.Resource.UserAuthResoruce;
+import com.inz.inz.security.Resource.UserRank;
+import com.inz.inz.security.Resource.UserResourcePost;
+import com.inz.inz.security.model.Authority;
+import com.inz.inz.security.model.AuthorityName;
+import com.inz.inz.security.model.User;
 import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

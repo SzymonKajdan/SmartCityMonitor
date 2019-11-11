@@ -1,6 +1,6 @@
 package com.inz.inz.service;
 
-import com.inz.inz.seciurity.model.User;
+import com.inz.inz.security.model.User;
 import org.springframework.stereotype.Service;
 @Service("userService")
 public class UserServiceImpl implements UserService {

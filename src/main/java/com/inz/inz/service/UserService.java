@@ -1,7 +1,7 @@
 package com.inz.inz.service;
 
 
-import com.inz.inz.seciurity.model.User;
+import com.inz.inz.security.model.User;
 
 public interface UserService {
 

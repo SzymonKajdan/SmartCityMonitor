@@ -6,8 +6,8 @@ import com.inz.inz.adapter.CityAdapter;
 import com.inz.inz.entity.CityEntity;
 import com.inz.inz.mapper.CityMapper;
 import com.inz.inz.repository.CityEntityRepository;
-import com.inz.inz.resoruce.CityResource;
-import com.inz.inz.resoruce.CityResourceGetLight;
+import com.inz.inz.resoruce.cityResource.CityResource;
+import com.inz.inz.resoruce.cityResource.CityResourceGetLight;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -28,6 +28,7 @@ public class CityAdapterImpl implements CityAdapter {
     @Override
     public List<CityResourceGetLight> getCities() throws DbException {
         List<CityEntity> cityEntities = cityEntityRepository.findAll();
+
         if (!cityEntities.isEmpty()) {
             return cityEntities.stream().map(cityMapper::mapToCityResourceGetLight).collect(Collectors.toList());
         } else {
