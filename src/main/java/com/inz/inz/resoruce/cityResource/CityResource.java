@@ -6,7 +6,6 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-
 public class CityResource extends CityResourceGetLight {
 
     private String longitude;

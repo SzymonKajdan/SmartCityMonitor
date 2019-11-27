@@ -1,6 +1,7 @@
 package com.inz.inz.service;
 
 import com.inz.inz.entity.*;
+import com.inz.inz.entity.enums.ReportType;
 import com.inz.inz.repository.*;
 import com.inz.inz.security.model.Authority;
 import com.inz.inz.security.model.AuthorityName;
@@ -129,8 +130,9 @@ public class InitService implements ApplicationListener<ContextRefreshedEvent> {
             entity.setReportRating(reportRatingEntity);
             entity.setDateReport(new Date());
             entity.setDescription("description");
-            entity.setPhoto("https://firebasestorage.googleapis.com/v0/b/montoring-b23b3.appspot.com/o/IMG_20190301_161631.jpg?alt=media&token=0c9de513-8e47-40b6-b309-b17548449b4e");
+            entity.setPhoto("https://firebasestorage.googleapis.com/v0/b/montoring-b23b3.appspot.com/o/img_165219.png?alt=media&token=706fb62b-7250-4539-a710-259b7379d7c6");
             // entity.setCity(cityEntity);
+            entity.setReportType(ReportType.HOLE_IN_THE_ROAD);
             reportEntityRepository.save(entity);
 
 
@@ -146,6 +148,8 @@ public class InitService implements ApplicationListener<ContextRefreshedEvent> {
 
             entity.setCity(cityEntity);
             entity.setUser(user);
+            entity.setLatitude("51.771524");
+            entity.setLongitude("19.547155");
             reportEntityRepository.save(entity);
             //.save(cityEntity);
             // userRepository.save(user);

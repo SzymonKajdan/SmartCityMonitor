@@ -9,7 +9,8 @@ public enum ErrorSpecifcation {
     SENDINGEMAIL("Error at sending emial try again later","0007"),
     USERNOTEXIST("User with this email not exist","0008"),
     NOTFOUND("Resorcue not found ","0009"),
-    UNAUTHORIZED("unauthorized","0010");
+    UNAUTHORIZED("unauthorized","0010"),
+    PASSWORDNOTEQULAS("password incorrect","0011");
 
     private String details;
     private String code;

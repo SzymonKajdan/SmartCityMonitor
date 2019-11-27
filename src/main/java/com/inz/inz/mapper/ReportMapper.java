@@ -23,7 +23,7 @@ public abstract class ReportMapper {
     @Autowired
     CityEntityRepository cityEntityRepository;
 
-
+    public static final String  PHOTO= "https://firebasestorage.googleapis.com/v0/b/montoring-b23b3.appspot.com/o/img_165219.png?alt=media&token=706fb62b-7250-4539-a710-259b7379d7c6";
 
 
     @Mappings({
@@ -32,7 +32,7 @@ public abstract class ReportMapper {
             @Mapping(target = "latitude", source = "res.latitude"),
             @Mapping(target = "description", source = "res.description"),
             @Mapping(target = "photo", source = "res.photo"),
-            @Mapping(target = "video", source = "res.video"),
+            @Mapping(target = "reportType", expression = "java(res.getReportType().getType())"),
             @Mapping(target = "isActive", expression = "java( res.getReportRating().getNotActiveCounter()<10&& res.getReportRating().getFalseReportQuantity()<10?true:false)")
     })
     public abstract ReportLight mapToReportLigth(ReportEntity res);
@@ -48,15 +48,17 @@ public abstract class ReportMapper {
             @Mapping(target = "userId",expression = "java(res.getUser().getId())"),
             @Mapping(target = "reportRating",ignore = true),
             @Mapping(target = "mark", expression = "java( res.getReportRating().getQuantity()!=0?res.getReportRating().getMarks()/res.getReportRating().getQuantity():0.0)"),
-            @Mapping(target = "isActive", expression = "java( res.getReportRating().getNotActiveCounter()<10&& res.getReportRating().getFalseReportQuantity()<10?true:false)")
-    })
+            @Mapping(target = "isActive", expression = "java( res.getReportRating().getNotActiveCounter()<10&& res.getReportRating().getFalseReportQuantity()<10?true:false)"),
+            @Mapping(target = "reportType", expression = "java(res.getReportType().getType())")
+    }
+    )
     public abstract ReportResource mapToReport(ReportEntity res);
 
     @Mappings({
             @Mapping(target = "longitude", source = "res.longitude"),
             @Mapping(target = "latitude", source = "res.latitude"),
             @Mapping(target = "description", source = "res.description"),
-            @Mapping(target = "photo", source = "res.photo"),
+            @Mapping(target = "photo", expression = "java(res.getPhoto() != null ? res.getPhoto() :PHOTO)"),
             @Mapping(target = "video", source = "res.video"),
             @Mapping(target = "reportType", ignore = true)
     })

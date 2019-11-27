@@ -1,15 +1,15 @@
 package com.inz.inz.mapper;
 
 import com.inz.inz.repository.AuthorityRepository;
-import com.inz.inz.security.Resource.UserAuthResoruce;
-import com.inz.inz.security.Resource.UserRank;
-import com.inz.inz.security.Resource.UserResourcePost;
+import com.inz.inz.resoruce.userResource.EditUserResource;
+import com.inz.inz.resoruce.userResource.UserAuthResoruce;
+import com.inz.inz.resoruce.userResource.UserRank;
+import com.inz.inz.resoruce.userResource.UserResourcePost;
 import com.inz.inz.security.model.Authority;
 import com.inz.inz.security.model.AuthorityName;
 import com.inz.inz.security.model.User;
 import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.ArrayList;
@@ -26,10 +26,12 @@ public abstract class UserMapper {
     @Autowired
     ReportMapper reportMapper;
 
-    @Bean
-    BCryptPasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+//    @Bean
+//    BCryptPasswordEncoder passwordEncoder() {
+//        return new BCryptPasswordEncoder();
+//    }
+    @Autowired
+    BCryptPasswordEncoder passwordEncoder;
 
 
     @Mappings({
@@ -48,6 +50,27 @@ public abstract class UserMapper {
             @Mapping(target = "quantity", source = "user.userRatingEntity.quantity")
     })
     public abstract UserRank mapToUserRank(User user);
+
+    @Mappings({
+            @Mapping(target = "email", source = "userResourcePost.email"),
+            @Mapping(target = "lastname", source = "userResourcePost.lastname"),
+            @Mapping(target = "firstname", source = "userResourcePost.firstname"),
+            @Mapping(target = "username", source = "userResourcePost.username"),
+
+
+    })
+    public abstract User mapUserResourcePostToUser(UserResourcePost userResourcePost);
+
+
+    @Mappings({
+            @Mapping(target = "email", source = "editUserResource.email"),
+            @Mapping(target = "lastname", source = "editUserResource.surname"),
+            @Mapping(target = "firstname", source = "editUserResource.firstname"),
+            @Mapping(target = "username", source = "editUserResource.username"),
+            @Mapping(target = "id",source = "editUserResource.id")
+
+    })
+    public abstract  User userToUpdateMapToUser(EditUserResource editUserResource);
 
 
     @AfterMapping
@@ -79,22 +102,15 @@ public abstract class UserMapper {
         }
     }
 
-    @Mappings({
-            @Mapping(target = "email", source = "userResourcePost.email"),
-            @Mapping(target = "lastname", source = "userResourcePost.lastname"),
-            @Mapping(target = "firstname", source = "userResourcePost.firstname"),
-            @Mapping(target = "username", source = "userResourcePost.username"),
-            @Mapping(target = "enabled", constant = "true"),
 
-    })
-    public abstract User mapUserResourcePostToUser(UserResourcePost userResourcePost);
 
     @AfterMapping
     protected void fillUser(UserResourcePost post, @MappingTarget User user) {
 
         Authority userRole = authorityRepository.findByName(AuthorityName.ROLE_USER);
+        user.setEnabled(true);
         user.setAuthorities(Collections.singletonList(userRole));
-        user.setPassword(passwordEncoder().encode(post.getPassword()));
+        user.setPassword(passwordEncoder.encode(post.getPassword()));
         user.setLastPasswordResetDate(new Date());
     }
 }

@@ -4,7 +4,7 @@ package com.inz.inz.security.controller;
 import com.inz.inz.exceptionhandler.AuthenticationException;
 import com.inz.inz.repository.UserRepository;
 import com.inz.inz.security.AdapterImpl.UserAdapterImpl;
-import com.inz.inz.security.Resource.UserAuthResoruce;
+import com.inz.inz.resoruce.userResource.UserAuthResoruce;
 import com.inz.inz.security.jwt.JwtAuthenticationRequest;
 import com.inz.inz.security.jwt.JwtTokenUtil;
 import com.inz.inz.security.jwt.JwtUser;

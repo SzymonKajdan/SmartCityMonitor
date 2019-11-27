@@ -5,10 +5,7 @@ import com.inz.inz.exceptionhandler.AuthenticationException;
 import com.inz.inz.exceptionhandler.DbException;
 import com.inz.inz.exceptionhandler.EnumExcpetion;
 import com.inz.inz.exceptionhandler.ExceptionModel;
-import com.inz.inz.resoruce.reportResource.MarkResourcePost;
-import com.inz.inz.resoruce.reportResource.NotActiveResource;
-import com.inz.inz.resoruce.reportResource.ReportResource;
-import com.inz.inz.resoruce.reportResource.ReportResourcePost;
+import com.inz.inz.resoruce.reportResource.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -56,9 +53,8 @@ public class ReportController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @GetMapping
-    @RequestMapping(value = "getUserReports/{id}",produces = MEDIA_TYPE)
-    public ResponseEntity<List<ReportResource>> getReports(@PathVariable Long id) throws DbException {
+    @GetMapping(value = "getUserReports",produces = MEDIA_TYPE)
+    public ResponseEntity<List<ReportLight>> getReports(@Valid @RequestParam(value = "id")Long id) throws DbException {
 
         return new ResponseEntity<>(reportAdapter.getReports(id), HttpStatus.OK);
     }

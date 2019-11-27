@@ -2,7 +2,7 @@ package com.inz.inz.controller;
 
 import com.inz.inz.exceptionhandler.DbException;
 import com.inz.inz.security.AdapterImpl.UserAdapterImpl;
-import com.inz.inz.security.Resource.UserResourcePost;
+import com.inz.inz.resoruce.userResource.UserResourcePost;
 import com.inz.inz.security.controller.UserRestController;
 import com.inz.inz.security.jwt.JwtUser;
 import com.inz.inz.security.model.User;

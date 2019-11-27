@@ -2,8 +2,8 @@ package com.inz.inz.mapper;
 
 import com.inz.inz.entity.*;
 import com.inz.inz.entity.enums.ReportType;
-import com.inz.inz.security.Resource.UserAuthResoruce;
-import com.inz.inz.security.Resource.UserResourcePost;
+import com.inz.inz.resoruce.userResource.UserAuthResoruce;
+import com.inz.inz.resoruce.userResource.UserResourcePost;
 import com.inz.inz.security.model.User;
 import com.inz.inz.security.service.EmailServiceImpl;
 import org.junit.Test;

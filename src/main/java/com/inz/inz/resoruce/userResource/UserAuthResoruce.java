@@ -1,4 +1,4 @@
-package com.inz.inz.security.Resource;
+package com.inz.inz.resoruce.userResource;
 
 import com.inz.inz.resoruce.reportResource.ReportLight;
 import lombok.Data;
@@ -8,7 +8,8 @@ import java.util.List;
 @Data
 public class UserAuthResoruce {
 
-    private  Long id;
+    private Long id;
+
     private String username;
 
     private String firstname;

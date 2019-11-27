@@ -1,4 +1,4 @@
-package com.inz.inz.security.Resource;
+package com.inz.inz.resoruce.userResource;
 
 import lombok.Data;
 

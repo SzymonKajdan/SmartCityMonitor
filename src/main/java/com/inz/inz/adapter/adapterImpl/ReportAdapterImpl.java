@@ -8,10 +8,7 @@ import com.inz.inz.entity.ReportRatingEntity;
 import com.inz.inz.entity.UserVoted;
 import com.inz.inz.mapper.ReportMapper;
 import com.inz.inz.repository.*;
-import com.inz.inz.resoruce.reportResource.MarkResourcePost;
-import com.inz.inz.resoruce.reportResource.NotActiveResource;
-import com.inz.inz.resoruce.reportResource.ReportResource;
-import com.inz.inz.resoruce.reportResource.ReportResourcePost;
+import com.inz.inz.resoruce.reportResource.*;
 import com.inz.inz.security.model.User;
 import com.inz.inz.security.service.UserTokenReciver;
 import org.joda.time.DateTime;
@@ -88,12 +85,12 @@ public class ReportAdapterImpl implements ReportAdapter {
     }
 
     @Override
-    public List<ReportResource> getReports(Long id) throws DbException {
-        List<ReportResource> resources = null;
+    public List<ReportLight> getReports(Long id) throws DbException {
+        List<ReportLight> resources = null;
         if (userRepository.findById(id).isPresent()) {
             List<ReportEntity> reportEntities=reportEntityRepository.findAllByUserId(id);
             
-            resources= reportEntities.stream().map(reportMapper::mapToReport).collect(Collectors.toList());
+            resources= reportEntities.stream().map(reportMapper::mapToReportLigth).collect(Collectors.toList());
             
         } else {
             userNotExist(id);

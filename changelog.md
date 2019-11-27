@@ -1,4 +1,15 @@
 
+## [0.0.10]
+### Changes
+- refator
+- chaiging in exception handling 
+- changing mapping's
+
+
+## [0.0.9]
+- add endpoint to edit user 
+- add new resources 
+
 ## [0.0.8]
 - changing packages names 
 - add unaouthorized  execption handling  

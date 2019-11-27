@@ -1,6 +1,7 @@
 package com.inz.inz.adapter.adapterImpl;
 
 import com.inz.inz.entity.*;
+import com.inz.inz.entity.enums.ReportType;
 import com.inz.inz.exceptionhandler.AuthenticationException;
 import com.inz.inz.exceptionhandler.DbException;
 import com.inz.inz.exceptionhandler.EnumExcpetion;
@@ -115,6 +116,7 @@ public class ReportAdapterImplTest {
         reportEntity.setCity(cityEntityRepository.findByName("lodz").get());
         reportEntity.setDateReport(new Date());
         reportEntity.setReportRating(reportRatingEntity);
+        reportEntity.setReportType(ReportType.HOLE_IN_THE_ROAD);
         reportEntityRepository.save(reportEntity);
     }
 

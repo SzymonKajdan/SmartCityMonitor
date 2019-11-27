@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingPathVariableException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 
 import java.util.ArrayList;
@@ -100,5 +101,13 @@ public class ExceptionHandler {
             serverModelException.setFields(new ArrayList<>());
         }
         return serverModelException;
+    }
+
+    @org.springframework.web.bind.annotation.ExceptionHandler({MissingServletRequestParameterException.class})
+    public ResponseEntity<ServerModelException> requestParamException(){
+        ServerModelException serverModelException=new ServerModelException();
+        serverModelException.setDetails("Required Long parameter 'id' is not present");
+        serverModelException.setCode("VE");
+        return new ResponseEntity<>(serverModelException,HttpStatus.BAD_REQUEST);
     }
 }

@@ -57,6 +57,7 @@ public class ReportMapperTest {
         reportEntity.setVideo("dsadsadsa");
         reportEntity.setPhoto("saddsadsadsa");
         reportEntity.setDescription("adsa");
+        reportEntity.setReportType(ReportType.HOLE_IN_THE_ROAD);
 
         ReportLight reportLight = reportMapper.mapToReportLigth(reportEntity);
         assertNotNull(reportLight);
@@ -65,7 +66,7 @@ public class ReportMapperTest {
         assertEquals(reportEntity.getLatitude(), reportLight.getLatitude());
         assertEquals(reportEntity.getLongitude(), reportLight.getLongitude());
         assertEquals(reportEntity.getPhoto(), reportLight.getPhoto());
-        assertEquals(reportEntity.getVideo(), reportLight.getVideo());
+        assertEquals(reportEntity.getReportType().getType(), reportLight.getReportType());
 
         assertNull(reportMapper.mapToReportLigth(null));
 
@@ -97,6 +98,7 @@ public class ReportMapperTest {
         reportEntity.setVideo("dsadsadsa");
         reportEntity.setPhoto("saddsadsadsa");
         reportEntity.setDescription("adsa");
+        reportEntity.setReportType(ReportType.HOLE_IN_THE_ROAD);
 
         ReportResource reportResource=reportMapper.mapToReport(reportEntity);
 

@@ -14,7 +14,7 @@ public class ReportLight {
 
     private String photo;
 
-    private String video;
+    private String reportType;
 
     private Boolean isActive;
 

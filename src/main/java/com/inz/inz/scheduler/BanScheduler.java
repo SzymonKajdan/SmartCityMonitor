@@ -36,6 +36,7 @@ public class BanScheduler {
                 if (x.getBanEntity().isBanned()) {
                     Date date = x.getBanEntity().getDate();
                     DateTime dateTime = new DateTime(date);
+
                     if (dateTime.isBeforeNow()) {
                         x.getBanEntity().setDate(null);
                         x.getBanEntity().setBanned(false);

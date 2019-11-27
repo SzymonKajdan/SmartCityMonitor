@@ -1,6 +1,6 @@
 package com.inz.inz.security.service;
 
-import com.inz.inz.security.Resource.UserAuthResoruce;
+import com.inz.inz.resoruce.userResource.UserAuthResoruce;
 
 import java.io.Serializable;
 import java.util.Date;

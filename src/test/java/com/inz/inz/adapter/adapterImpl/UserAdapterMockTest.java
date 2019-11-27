@@ -7,7 +7,7 @@ import com.inz.inz.repository.BanEntityRepository;
 import com.inz.inz.repository.UserRatingRepository;
 import com.inz.inz.repository.UserRepository;
 import com.inz.inz.security.AdapterImpl.UserAdapterImpl;
-import com.inz.inz.security.Resource.UserResourcePost;
+import com.inz.inz.resoruce.userResource.UserResourcePost;
 import com.inz.inz.security.adapter.UserAdapter;
 import com.inz.inz.security.model.User;
 import com.inz.inz.service.InitService;
