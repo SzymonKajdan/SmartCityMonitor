@@ -1,8 +1,5 @@
-package com.inz.inz.security.model;
+package com.inz.inz.entity;
 
-import com.inz.inz.entity.BanEntity;
-import com.inz.inz.entity.ReportEntity;
-import com.inz.inz.entity.UserRatingEntity;
 import lombok.Data;
 
 import javax.persistence.*;

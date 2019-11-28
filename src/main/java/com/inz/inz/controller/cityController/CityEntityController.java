@@ -1,4 +1,4 @@
-package com.inz.inz.controller;
+package com.inz.inz.controller.cityController;
 
 import com.inz.inz.exceptionhandler.DbException;
 import com.inz.inz.adapter.adapterImpl.CityAdapterImpl;

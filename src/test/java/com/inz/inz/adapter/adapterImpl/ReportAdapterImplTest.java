@@ -12,7 +12,7 @@ import com.inz.inz.resoruce.reportResource.MarkResourcePost;
 import com.inz.inz.resoruce.reportResource.NotActiveResource;
 import com.inz.inz.resoruce.reportResource.ReportResource;
 import com.inz.inz.resoruce.reportResource.ReportResourcePost;
-import com.inz.inz.security.model.User;
+import com.inz.inz.entity.User;
 import com.inz.inz.security.service.UserTokenReciver;
 import com.inz.inz.service.InitService;
 import org.junit.Test;

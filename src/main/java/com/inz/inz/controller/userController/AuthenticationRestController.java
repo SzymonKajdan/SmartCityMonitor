@@ -1,14 +1,14 @@
-package com.inz.inz.security.controller;
+package com.inz.inz.controller.userController;
 
 
 import com.inz.inz.exceptionhandler.AuthenticationException;
 import com.inz.inz.repository.UserRepository;
-import com.inz.inz.security.AdapterImpl.UserAdapterImpl;
+import com.inz.inz.adapter.adapterImpl.UserAdapterImpl;
 import com.inz.inz.resoruce.userResource.UserAuthResoruce;
 import com.inz.inz.security.jwt.JwtAuthenticationRequest;
 import com.inz.inz.security.jwt.JwtTokenUtil;
 import com.inz.inz.security.jwt.JwtUser;
-import com.inz.inz.security.model.User;
+import com.inz.inz.entity.User;
 import com.inz.inz.security.service.JwtAuthenticationResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -55,14 +55,14 @@ public class AuthenticationRestController {
 
         authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
 
-        // Reload password post-security so we can generate the token
+
         final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
         final String token = jwtTokenUtil.generateToken(userDetails);
         final User user = userRepository.findByUsername(authenticationRequest.getUsername());
 
 
         UserAuthResoruce userAuthResoruce = userAdapter.mapUserAuthResource(user);
-        // Return the token
+
         return ResponseEntity.ok(new JwtAuthenticationResponse(
                 token, jwtTokenUtil.getExpirationDateFromToken(token), userAuthResoruce));
     }
@@ -87,9 +87,7 @@ public class AuthenticationRestController {
     }
 
 
-    /**
-     * Authenticates the user. If something is wrong, an {@link AuthenticationException} will be thrown
-     */
+
     private void authenticate(String username, String password) throws AuthenticationException {
         Objects.requireNonNull(username);
         Objects.requireNonNull(password);

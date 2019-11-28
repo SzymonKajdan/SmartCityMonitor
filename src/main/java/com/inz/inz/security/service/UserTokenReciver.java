@@ -1,7 +1,7 @@
 package com.inz.inz.security.service;
 
 
-import com.inz.inz.security.AdapterImpl.UserAdapterImpl;
+import com.inz.inz.adapter.adapterImpl.UserAdapterImpl;
 import com.inz.inz.security.jwt.JwtTokenUtil;
 import com.inz.inz.security.jwt.JwtUser;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,7 +1,7 @@
-package com.inz.inz.security.controller;
+package com.inz.inz.controller.userController;
 
 import com.inz.inz.exceptionhandler.DbException;
-import com.inz.inz.security.AdapterImpl.UserAdapterImpl;
+import com.inz.inz.adapter.adapterImpl.UserAdapterImpl;
 import com.inz.inz.resoruce.userResource.EditUserResource;
 import com.inz.inz.resoruce.userResource.PasswordResourcePost;
 import com.inz.inz.resoruce.userResource.UserRank;

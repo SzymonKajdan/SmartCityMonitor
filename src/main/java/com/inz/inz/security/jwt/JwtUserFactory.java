@@ -1,7 +1,7 @@
 package com.inz.inz.security.jwt;
 
-import com.inz.inz.security.model.Authority;
-import com.inz.inz.security.model.User;
+import com.inz.inz.entity.Authority;
+import com.inz.inz.entity.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 

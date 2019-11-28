@@ -1,4 +1,4 @@
-package com.inz.inz.security.AdapterImpl;
+package com.inz.inz.adapter.adapterImpl;
 
 import com.inz.inz.entity.BanEntity;
 import com.inz.inz.entity.UserRatingEntity;
@@ -11,9 +11,9 @@ import com.inz.inz.repository.BanEntityRepository;
 import com.inz.inz.repository.UserRatingRepository;
 import com.inz.inz.repository.UserRepository;
 import com.inz.inz.resoruce.userResource.*;
-import com.inz.inz.security.adapter.UserAdapter;
-import com.inz.inz.security.model.User;
-import com.inz.inz.security.service.EmailService;
+import com.inz.inz.adapter.UserAdapter;
+import com.inz.inz.entity.User;
+import com.inz.inz.emailService.EmailService;
 import com.inz.inz.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

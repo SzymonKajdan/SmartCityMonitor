@@ -9,7 +9,7 @@ import com.inz.inz.entity.UserVoted;
 import com.inz.inz.mapper.ReportMapper;
 import com.inz.inz.repository.*;
 import com.inz.inz.resoruce.reportResource.*;
-import com.inz.inz.security.model.User;
+import com.inz.inz.entity.User;
 import com.inz.inz.security.service.UserTokenReciver;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;

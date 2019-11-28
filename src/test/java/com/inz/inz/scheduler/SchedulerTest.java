@@ -3,7 +3,7 @@ package com.inz.inz.scheduler;
 import com.inz.inz.entity.BanEntity;
 import com.inz.inz.repository.BanEntityRepository;
 import com.inz.inz.repository.UserRepository;
-import com.inz.inz.security.model.User;
+import com.inz.inz.entity.User;
 import com.inz.inz.service.InitService;
 import org.junit.Test;
 import org.junit.runner.RunWith;

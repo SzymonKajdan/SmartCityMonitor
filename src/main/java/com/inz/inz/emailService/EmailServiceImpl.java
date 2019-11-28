@@ -1,10 +1,10 @@
-package com.inz.inz.security.service;
+package com.inz.inz.emailService;
 
 import com.inz.inz.exceptionhandler.DbException;
 import com.inz.inz.exceptionhandler.ErrorSpecifcation;
 import com.inz.inz.exceptionhandler.Field;
 import com.inz.inz.repository.UserRepository;
-import com.inz.inz.security.model.User;
+import com.inz.inz.entity.User;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

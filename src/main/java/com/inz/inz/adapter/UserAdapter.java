@@ -1,8 +1,8 @@
-package com.inz.inz.security.adapter;
+package com.inz.inz.adapter;
 
 import com.inz.inz.exceptionhandler.DbException;
 import com.inz.inz.resoruce.userResource.*;
-import com.inz.inz.security.model.User;
+import com.inz.inz.entity.User;
 
 import java.util.List;
 

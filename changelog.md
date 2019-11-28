@@ -1,4 +1,9 @@
 
+## [0.0.11]
+### changes
+- refactor placing files 
+
+
 ## [0.0.10]
 ### Changes
 - refator

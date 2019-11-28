@@ -1,4 +1,4 @@
-package com.inz.inz.security.model;
+package com.inz.inz.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.json.JSONPropertyIgnore;

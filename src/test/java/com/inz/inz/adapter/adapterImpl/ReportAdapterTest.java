@@ -10,7 +10,7 @@ import com.inz.inz.exceptionhandler.EnumExcpetion;
 import com.inz.inz.mapper.ReportMapper;
 import com.inz.inz.repository.*;
 import com.inz.inz.resoruce.reportResource.ReportResourcePost;
-import com.inz.inz.security.model.User;
+import com.inz.inz.entity.User;
 import com.inz.inz.security.service.UserTokenReciver;
 import com.inz.inz.service.InitService;
 import org.junit.Test;

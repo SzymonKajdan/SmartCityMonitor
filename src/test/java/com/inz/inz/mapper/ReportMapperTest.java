@@ -10,7 +10,7 @@ import com.inz.inz.repository.CityEntityRepository;
 import com.inz.inz.resoruce.reportResource.ReportLight;
 import com.inz.inz.resoruce.reportResource.ReportResource;
 import com.inz.inz.resoruce.reportResource.ReportResourcePost;
-import com.inz.inz.security.model.User;
+import com.inz.inz.entity.User;
 import com.inz.inz.service.InitService;
 import org.junit.Test;
 import org.junit.runner.RunWith;

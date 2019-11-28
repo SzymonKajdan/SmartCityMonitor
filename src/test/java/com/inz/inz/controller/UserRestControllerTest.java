@@ -1,11 +1,11 @@
 package com.inz.inz.controller;
 
+import com.inz.inz.controller.userController.UserRestController;
 import com.inz.inz.exceptionhandler.DbException;
-import com.inz.inz.security.AdapterImpl.UserAdapterImpl;
+import com.inz.inz.adapter.adapterImpl.UserAdapterImpl;
 import com.inz.inz.resoruce.userResource.UserResourcePost;
-import com.inz.inz.security.controller.UserRestController;
 import com.inz.inz.security.jwt.JwtUser;
-import com.inz.inz.security.model.User;
+import com.inz.inz.entity.User;
 import com.inz.inz.security.service.UserTokenReciver;
 import org.junit.Test;
 import org.junit.runner.RunWith;

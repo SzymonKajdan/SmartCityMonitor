@@ -1,4 +1,4 @@
-package com.inz.inz.security.service;
+package com.inz.inz.emailService;
 
 import com.inz.inz.exceptionhandler.DbException;
 

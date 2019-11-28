@@ -1,7 +1,7 @@
 package com.inz.inz.repository;
 
-import com.inz.inz.security.model.Authority;
-import com.inz.inz.security.model.AuthorityName;
+import com.inz.inz.entity.Authority;
+import com.inz.inz.entity.AuthorityName;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface AuthorityRepository extends JpaRepository<Authority, Long> {

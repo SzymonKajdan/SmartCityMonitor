@@ -1,6 +1,7 @@
 package com.inz.inz.controller;
 
 import com.inz.inz.adapter.adapterImpl.ReportAdapterImpl;
+import com.inz.inz.controller.reportController.ReportController;
 import com.inz.inz.entity.ReportEntity;
 import com.inz.inz.exceptionhandler.AuthenticationException;
 import com.inz.inz.exceptionhandler.DbException;

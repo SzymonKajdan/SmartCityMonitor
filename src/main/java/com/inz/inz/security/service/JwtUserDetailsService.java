@@ -2,7 +2,7 @@ package com.inz.inz.security.service;
 
 import com.inz.inz.repository.UserRepository;
 import com.inz.inz.security.jwt.JwtUserFactory;
-import com.inz.inz.security.model.User;
+import com.inz.inz.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

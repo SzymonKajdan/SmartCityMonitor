@@ -1,4 +1,4 @@
-package com.inz.inz.controller;
+package com.inz.inz.controller.reportController;
 
 import com.inz.inz.adapter.adapterImpl.ReportAdapterImpl;
 import com.inz.inz.exceptionhandler.AuthenticationException;
