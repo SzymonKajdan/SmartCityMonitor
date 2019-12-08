@@ -1,10 +1,12 @@
 package com.inz.inz.mapper;
 
 import com.inz.inz.repository.AuthorityRepository;
-import com.inz.inz.resoruce.userResource.EditUserResource;
-import com.inz.inz.resoruce.userResource.UserAuthResoruce;
-import com.inz.inz.resoruce.userResource.UserRank;
-import com.inz.inz.resoruce.userResource.UserResourcePost;
+import com.inz.inz.resoruce.UserBanResource;
+import com.inz.inz.resoruce.UsersLight;
+import com.inz.inz.resoruce.userresource.EditUserResource;
+import com.inz.inz.resoruce.userresource.UserAuthResoruce;
+import com.inz.inz.resoruce.userresource.UserRank;
+import com.inz.inz.resoruce.userresource.UserResourcePost;
 import com.inz.inz.entity.Authority;
 import com.inz.inz.entity.AuthorityName;
 import com.inz.inz.entity.User;
@@ -26,10 +28,7 @@ public abstract class UserMapper {
     @Autowired
     ReportMapper reportMapper;
 
-//    @Bean
-//    BCryptPasswordEncoder passwordEncoder() {
-//        return new BCryptPasswordEncoder();
-//    }
+
     @Autowired
     BCryptPasswordEncoder passwordEncoder;
 
@@ -67,16 +66,25 @@ public abstract class UserMapper {
             @Mapping(target = "lastname", source = "editUserResource.surname"),
             @Mapping(target = "firstname", source = "editUserResource.firstname"),
             @Mapping(target = "username", source = "editUserResource.username"),
-            @Mapping(target = "id",source = "editUserResource.id")
+            @Mapping(target = "id", source = "editUserResource.id")
 
     })
-    public abstract  User userToUpdateMapToUser(EditUserResource editUserResource);
+    public abstract User userToUpdateMapToUser(EditUserResource editUserResource);
 
+    @Mappings({
+            @Mapping(target = "email", source = "user.email"),
+            @Mapping(target = "id", source = "user.id"),
+            @Mapping(target = "username", source = "user.username"),
+            @Mapping(target = "isBanned", expression = "java(user.getBanEntity().isBanned())")
+    })
+    public abstract UsersLight mapToUserLigth(User user);
 
+    @Mapping(target = "id",source = "userBanResource.id")
+    public  abstract  User mapToUser(UserBanResource userBanResource);
     @AfterMapping
     protected void fillMark(User user, @MappingTarget UserRank userRank) {
         userRank.setAvgMark(user.getUserRatingEntity().getQuantity() != 0
-                ?Math.round( (double)user.getUserRatingEntity().getMarks() / (double) user.getUserRatingEntity().getQuantity()) : 0.0);
+                ? Math.round((double) user.getUserRatingEntity().getMarks() / (double) user.getUserRatingEntity().getQuantity()) : 0.0);
 
     }
 
@@ -88,7 +96,7 @@ public abstract class UserMapper {
         }
         if (user.getUserRatingEntity() != null) {
             double rating = user.getUserRatingEntity().getQuantity() != 0
-                    ? (double)user.getUserRatingEntity().getMarks() / (double) user.getUserRatingEntity().getQuantity() : 0.0;
+                    ? (double) user.getUserRatingEntity().getMarks() / (double) user.getUserRatingEntity().getQuantity() : 0.0;
             userAuthResoruce.setUserRating(rating);
         }
     }
@@ -101,7 +109,6 @@ public abstract class UserMapper {
             userAuthResoruce.setReports(new ArrayList<>());
         }
     }
-
 
 
     @AfterMapping

@@ -69,8 +69,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
                 .antMatchers("/auth/**").permitAll()
-                .antMatchers("/addUser").permitAll()
+                .antMatchers("/signUp").permitAll()
+                .antMatchers("/logIn").permitAll()
                 .antMatchers("/cities/**").permitAll()
+                .antMatchers("/favicon.ico ").permitAll().
+                antMatchers("/reports/getReport/**").permitAll()
                 .anyRequest().authenticated();
 
         httpSecurity
@@ -89,24 +92,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .ignoring()
                 .antMatchers(
                         HttpMethod.POST,
-                        authenticationPath
+                        "logIn"
                 )
                 .and()
                 .ignoring()
                 .antMatchers(
                         HttpMethod.POST,
-                        "/addUser"
-                )
-                .and()
-                .ignoring()
-                .antMatchers(
-                        HttpMethod.GET,
-                        "/",
-                        "/*.html",
-                        "/favicon.ico",
-                        "/**/*.html",
-                        "/**/*.css",
-                        "/**/*.js"
+                        "/signUp"
                 );
     }
 }

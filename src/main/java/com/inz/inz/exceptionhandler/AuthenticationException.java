@@ -5,8 +5,8 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class AuthenticationException extends  Throwable {
-    private String details;
-    private String code;
+public class AuthenticationException extends Exception {
+    private final String details;
+    private final String code;
 
 }

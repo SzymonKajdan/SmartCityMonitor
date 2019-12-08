@@ -1,4 +1,9 @@
 
+## [0.1.0]
+### changes
+- add admin endpoints 
+
+
 ## [0.0.11]
 ### changes
 - refactor placing files 

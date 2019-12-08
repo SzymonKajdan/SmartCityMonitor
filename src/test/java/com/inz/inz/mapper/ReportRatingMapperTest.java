@@ -1,7 +1,7 @@
 package com.inz.inz.mapper;
 
 import com.inz.inz.entity.ReportRatingEntity;
-import com.inz.inz.resoruce.reportResource.ReportRatingResource;
+import com.inz.inz.resoruce.reportresource.ReportRatingResource;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 @Data
 public class DbException extends ExceptionModel {
 
-    private HttpStatus httpStatus;
+    private  HttpStatus httpStatus;
     public DbException(String details, String code, Field field) {
     super(details,code,field);
     }

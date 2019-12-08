@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ExceptionModel extends Throwable {
+public class ExceptionModel extends Exception {
     private String caused;
     private String code;
     private Field field;

@@ -19,7 +19,5 @@ public enum ReportType {
         return type;
     }
 
-    public void setType(String type){
-       this.type=type;
-    }
+
 }

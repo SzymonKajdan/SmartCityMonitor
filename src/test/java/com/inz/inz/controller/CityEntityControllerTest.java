@@ -1,10 +1,10 @@
 package com.inz.inz.controller;
 
-import com.inz.inz.adapter.adapterImpl.CityAdapterImpl;
-import com.inz.inz.controller.cityController.CityEntityController;
+import com.inz.inz.adapter.adapterimpl.CityAdapterImpl;
+import com.inz.inz.controller.citycontroller.CityEntityController;
 import com.inz.inz.exceptionhandler.DbException;
-import com.inz.inz.resoruce.cityResource.CityResource;
-import com.inz.inz.resoruce.cityResource.CityResourceGetLight;
+import com.inz.inz.resoruce.cityresource.CityResource;
+import com.inz.inz.resoruce.cityresource.CityResourceGetLight;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,8 +1,9 @@
 package com.inz.inz.mapper;
 
 import com.inz.inz.entity.CityEntity;
-import com.inz.inz.resoruce.cityResource.CityResource;
-import com.inz.inz.resoruce.cityResource.CityResourceGetLight;
+import com.inz.inz.resoruce.CityPostResource;
+import com.inz.inz.resoruce.cityresource.CityResource;
+import com.inz.inz.resoruce.cityresource.CityResourceGetLight;
 import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -14,6 +15,13 @@ public abstract class CityMapper {
 
     @Autowired
     ReportMapper reportMapper;
+
+    @Mappings({
+            @Mapping(target = "longitude", source = "cityPostResource.longt"),
+            @Mapping(target = "name", source = "cityPostResource.cityName"),
+            @Mapping(target = "latitude", source = "cityPostResource.lat")
+    })
+    public abstract CityEntity mapToCityEntity(CityPostResource cityPostResource);
 
     @Mappings({
             @Mapping(target = "cityName", source = "cityEntity.name"),

@@ -55,8 +55,8 @@ public class JwtTokenUtil implements Serializable {
     }
 
     private Boolean isTokenExpired(String token) {
-        final Date expiration = getExpirationDateFromToken(token);
-        return expiration.before(clock.now());
+        final Date expirationDateFromToken = getExpirationDateFromToken(token);
+        return expirationDateFromToken.before(clock.now());
     }
 
     private Boolean isCreatedBeforeLastPasswordReset(Date created, Date lastPasswordReset) {
@@ -64,14 +64,9 @@ public class JwtTokenUtil implements Serializable {
     }
 
     private Boolean ignoreTokenExpiration(String token) {
-        // here you specify tokens, for that the expiration is ignored
 
-        if(token.equals("eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VyIiwiZXhwIjoxNTc1NTk1NzIzLCJpYXQiOjE1NzM5OTA5MjN9.bU147LKgZMVK5d8vtoa5tuiDGcsvnPXO1PDD2TmUsrlL--rHJbZWzjFqQfL0WefROhpAL7TuTF5SctKxVv3TKA")||
-                token.equals("eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTU1NjU2ODk1NSwiaWF0IjoxNTU1OTY0MTU1fQ.pXHA-fFfvgCHDx5ICFwj-fXi6Ps7rkHzouCxUPqG2wuyTASeJ2nhkxDL2NRjdnnb6mXyfpimamo03Qf7h6hNZA")){
-            return true;
-        }
-
-        return false;
+        return token.equals("eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VyIiwiZXhwIjoxNTc1NTk1NzIzLCJpYXQiOjE1NzM5OTA5MjN9.bU147LKgZMVK5d8vtoa5tuiDGcsvnPXO1PDD2TmUsrlL--rHJbZWzjFqQfL0WefROhpAL7TuTF5SctKxVv3TKA")||
+                token.equals("eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTU1NjU2ODk1NSwiaWF0IjoxNTU1OTY0MTU1fQ.pXHA-fFfvgCHDx5ICFwj-fXi6Ps7rkHzouCxUPqG2wuyTASeJ2nhkxDL2NRjdnnb6mXyfpimamo03Qf7h6hNZA");
     }
 
     public String generateToken(UserDetails userDetails) {
@@ -92,31 +87,11 @@ public class JwtTokenUtil implements Serializable {
                 .compact();
     }
 
-    public Boolean canTokenBeRefreshed(String token, Date lastPasswordReset) {
-        final Date created = getIssuedAtDateFromToken(token);
-        return !isCreatedBeforeLastPasswordReset(created, lastPasswordReset)
-                && (!isTokenExpired(token) || ignoreTokenExpiration(token));
-    }
-
-    public String refreshToken(String token) {
-        final Date createdDate = clock.now();
-        final Date expirationDate = calculateExpirationDate(createdDate);
-
-        final Claims claims = getAllClaimsFromToken(token);
-        claims.setIssuedAt(createdDate);
-        claims.setExpiration(expirationDate);
-
-        return Jwts.builder()
-                .setClaims(claims)
-                .signWith(SignatureAlgorithm.HS512, secret)
-                .compact();
-    }
 
     public Boolean validateToken(String token, UserDetails userDetails) {
         JwtUser user = (JwtUser) userDetails;
         final String username = getUsernameFromToken(token);
         final Date created = getIssuedAtDateFromToken(token);
-        //final Date expiration = getExpirationDateFromToken(token);
         return (
                 username.equals(user.getUsername())
                         && !isTokenExpired(token)

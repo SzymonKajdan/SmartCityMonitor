@@ -57,14 +57,14 @@ public class InitService implements ApplicationListener<ContextRefreshedEvent> {
             authorityRepository.save(adminRole);
             authorityRepository.save(userRole);
 
-            adminRole = authorityRepository.findByName(AuthorityName.ROLE_ADMIN);//.orElseThrow(() -> new RuntimeException("Fail! -> Cause: User Role not find."));
-            userRole = authorityRepository.findByName(AuthorityName.ROLE_USER);//.orElseThrow(() -> new RuntimeException("Fail! -> Cause: User Role not find."));
+            adminRole = authorityRepository.findByName(AuthorityName.ROLE_ADMIN);
+            userRole = authorityRepository.findByName(AuthorityName.ROLE_USER);
 
             User admin = new User();
             admin.setEmail("admin@email.pl");
             admin.setUsername("admin");
-            admin.setLastname("admin");
-            admin.setFirstname("admin");
+            admin.setLastname("admin1");
+            admin.setFirstname("admin2");
             admin.setLastPasswordResetDate(new Date());
             admin.setEnabled(true);
             admin.setPassword(encoder.encode("qwerty"));
@@ -72,7 +72,8 @@ public class InitService implements ApplicationListener<ContextRefreshedEvent> {
 
 
             CityEntity cityEntity = new CityEntity();
-
+            cityEntity.setLatitude("51.771524");
+            cityEntity.setLongitude("19.547155");
             cityEntity.setName("Lodz");
             cityEntity.setReportList(new ArrayList<>());
 
@@ -85,7 +86,7 @@ public class InitService implements ApplicationListener<ContextRefreshedEvent> {
             banEntityRepository.save(banEntity);
 
 
-            BanEntity adminBan=new BanEntity();
+            BanEntity adminBan = new BanEntity();
             banEntityRepository.save(adminBan);
 
             UserRatingEntity userRatingEntity1 = new UserRatingEntity();
@@ -113,7 +114,7 @@ public class InitService implements ApplicationListener<ContextRefreshedEvent> {
 
             user.setUserRatingEntity(userRatingEntity);
 
-            UserVoted userVoted =new UserVoted();
+            UserVoted userVoted = new UserVoted();
             userVoted.setUserId(1l);
             userVotedRepository.save(userVoted);
 
@@ -131,7 +132,7 @@ public class InitService implements ApplicationListener<ContextRefreshedEvent> {
             entity.setDateReport(new Date());
             entity.setDescription("description");
             entity.setPhoto("https://firebasestorage.googleapis.com/v0/b/montoring-b23b3.appspot.com/o/img_165219.png?alt=media&token=706fb62b-7250-4539-a710-259b7379d7c6");
-            // entity.setCity(cityEntity);
+
             entity.setReportType(ReportType.HOLE_IN_THE_ROAD);
             reportEntityRepository.save(entity);
 
@@ -151,9 +152,7 @@ public class InitService implements ApplicationListener<ContextRefreshedEvent> {
             entity.setLatitude("51.771524");
             entity.setLongitude("19.547155");
             reportEntityRepository.save(entity);
-            //.save(cityEntity);
-            // userRepository.save(user);
-            ReportRatingEntity reportRatingEntity1=new ReportRatingEntity();
+
 
         }
     }

@@ -8,9 +8,9 @@ import com.inz.inz.entity.CityEntity;
 import com.inz.inz.entity.ReportEntity;
 import com.inz.inz.entity.enums.ReportType;
 import com.inz.inz.repository.CityEntityRepository;
-import com.inz.inz.resoruce.reportResource.ReportLight;
-import com.inz.inz.resoruce.reportResource.ReportResource;
-import com.inz.inz.resoruce.reportResource.ReportResourcePost;
+import com.inz.inz.resoruce.reportresource.ReportLight;
+import com.inz.inz.resoruce.reportresource.ReportResource;
+import com.inz.inz.resoruce.reportresource.ReportResourcePost;
 import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -33,7 +33,8 @@ public abstract class ReportMapper {
             @Mapping(target = "description", source = "res.description"),
             @Mapping(target = "photo", source = "res.photo"),
             @Mapping(target = "reportType", expression = "java(res.getReportType().getType())"),
-            @Mapping(target = "isActive", expression = "java( res.getReportRating().getNotActiveCounter()<10&& res.getReportRating().getFalseReportQuantity()<10?true:false)")
+            @Mapping(target = "isActive", expression = "java( res.getReportRating().getNotActiveCounter()<10&& res.getReportRating().getFalseReportQuantity()<10?true:false)"),
+            @Mapping(target = "reportDate",expression = "java(res.getDateReport().toString())")
     })
     public abstract ReportLight mapToReportLigth(ReportEntity res);
 
@@ -69,7 +70,7 @@ public abstract class ReportMapper {
         Optional<CityEntity> cityEntity = cityEntityRepository.findByName(res.getCityName());
         if (!cityEntity.isPresent()) {
             Field field = new Field();
-            field.setField("cityName");
+            field.setFieldName("cityName");
             field.setDetails("City " + res.getCityName());
             throw new DbException(ErrorSpecifcation.RESURCENOTEXIST.getDetails(), ErrorSpecifcation.RESURCENOTEXIST.getCode(), field);
         } else {

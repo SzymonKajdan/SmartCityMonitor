@@ -1,7 +1,7 @@
 package com.inz.inz.security.service;
 
 
-import com.inz.inz.adapter.adapterImpl.UserAdapterImpl;
+import com.inz.inz.adapter.adapterimpl.UserAdapterImpl;
 import com.inz.inz.security.jwt.JwtTokenUtil;
 import com.inz.inz.security.jwt.JwtUser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +31,8 @@ public class UserTokenReciver {
     public JwtUser getAuthenticatedUser(HttpServletRequest request) {
         String token = request.getHeader(tokenHeader).substring(7);
         String username = jwtTokenUtil.getUsernameFromToken(token);
-        JwtUser user = (JwtUser) userDetailsService.loadUserByUsername(username);
-        return user;
+
+        return (JwtUser) userDetailsService.loadUserByUsername(username);
     }
     public Long getUserId(HttpServletRequest request){
         String token = request.getHeader(tokenHeader).substring(7);

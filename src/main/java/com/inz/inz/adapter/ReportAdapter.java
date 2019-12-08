@@ -5,7 +5,7 @@ import com.inz.inz.exceptionhandler.DbException;
 import com.inz.inz.exceptionhandler.EnumExcpetion;
 import com.inz.inz.exceptionhandler.ExceptionModel;
 import com.inz.inz.entity.ReportEntity;
-import com.inz.inz.resoruce.reportResource.*;
+import com.inz.inz.resoruce.reportresource.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -24,4 +24,6 @@ public interface ReportAdapter {
     Optional<ReportEntity> markAsFalse(NotActiveResource notActiveResource) throws AuthenticationException, DbException;
 
     List<ReportLight> getReports(Long id) throws DbException;
+
+    void blockReport(Long id) throws DbException;
 }

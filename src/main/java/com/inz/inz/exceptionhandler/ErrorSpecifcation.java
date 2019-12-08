@@ -10,7 +10,8 @@ public enum ErrorSpecifcation {
     USERNOTEXIST("User with this email not exist","0008"),
     NOTFOUND("Resorcue not found ","0009"),
     UNAUTHORIZED("unauthorized","0010"),
-    PASSWORDNOTEQULAS("password incorrect","0011");
+    PASSWORDNOTEQULAS("password incorrect","0011"),
+    CITYEXIST("city exsit","0012");
 
     private String details;
     private String code;

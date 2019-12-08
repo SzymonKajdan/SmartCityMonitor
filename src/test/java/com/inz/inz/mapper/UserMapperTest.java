@@ -2,10 +2,10 @@ package com.inz.inz.mapper;
 
 import com.inz.inz.entity.*;
 import com.inz.inz.entity.enums.ReportType;
-import com.inz.inz.resoruce.userResource.UserAuthResoruce;
-import com.inz.inz.resoruce.userResource.UserResourcePost;
+import com.inz.inz.resoruce.userresource.UserAuthResoruce;
+import com.inz.inz.resoruce.userresource.UserResourcePost;
 import com.inz.inz.entity.User;
-import com.inz.inz.emailService.EmailServiceImpl;
+import com.inz.inz.emailservice.EmailServiceImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;

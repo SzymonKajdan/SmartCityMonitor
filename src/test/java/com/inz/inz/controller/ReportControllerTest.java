@@ -1,16 +1,16 @@
 package com.inz.inz.controller;
 
-import com.inz.inz.adapter.adapterImpl.ReportAdapterImpl;
-import com.inz.inz.controller.reportController.ReportController;
+import com.inz.inz.adapter.adapterimpl.ReportAdapterImpl;
+import com.inz.inz.controller.reportcontroller.ReportController;
 import com.inz.inz.entity.ReportEntity;
 import com.inz.inz.exceptionhandler.AuthenticationException;
 import com.inz.inz.exceptionhandler.DbException;
 import com.inz.inz.exceptionhandler.EnumExcpetion;
 import com.inz.inz.exceptionhandler.ExceptionModel;
-import com.inz.inz.resoruce.reportResource.MarkResourcePost;
-import com.inz.inz.resoruce.reportResource.NotActiveResource;
-import com.inz.inz.resoruce.reportResource.ReportResource;
-import com.inz.inz.resoruce.reportResource.ReportResourcePost;
+import com.inz.inz.resoruce.reportresource.MarkResourcePost;
+import com.inz.inz.resoruce.reportresource.NotActiveResource;
+import com.inz.inz.resoruce.reportresource.ReportResource;
+import com.inz.inz.resoruce.reportresource.ReportResourcePost;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
