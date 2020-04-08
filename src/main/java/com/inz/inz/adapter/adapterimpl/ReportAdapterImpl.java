@@ -370,4 +370,4 @@ public class ReportAdapterImpl implements ReportAdapter {
     private Long getUserId(HttpServletRequest request) {
         return userTokenRecvier.getUserId(request);
     }
-}
+    }

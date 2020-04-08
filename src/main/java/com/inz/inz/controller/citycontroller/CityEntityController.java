@@ -16,7 +16,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping({"cities", "/api/cities"})
-
 public class CityEntityController {
 
     private static final String MEDIA_TYPE = "application/json";
